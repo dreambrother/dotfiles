@@ -1,0 +1,346 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  // "proxy": "socks5h://127.0.0.1:10808",
+  "edit_predictions": {
+    "mode": "subtle",
+    "provider": "zed"
+  },
+  "diff_view_style": "split",
+  "show_edit_predictions": true,
+  "ssh_connections": [],
+  "restore_on_startup": "launchpad",
+  "format_on_save": "off",
+  "project_panel": {
+    "starts_open": true,
+    "auto_reveal_entries": true,
+    "dock": "left"
+  },
+  "outline_panel": {
+    "dock": "left"
+  },
+  "collaboration_panel": {
+    "dock": "left"
+  },
+  "agent": {
+    "tool_permissions": {
+      "tools": {
+        "terminal": {
+          "always_allow": [
+            {
+              "pattern": "^poetry\\s+run(\\s|$)"
+            },
+            {
+              "pattern": "^mvn\\s+compile(\\s|$)"
+            },
+            {
+              "pattern": "^tail\\b"
+            },
+            {
+              "pattern": "^mvn\\s+test(\\s|$)"
+            },
+            {
+              "pattern": "^ls\\b"
+            },
+            {
+              "pattern": "^cat\\s+target/surefire-reports/\\*\\.txt(\\s|$)"
+            },
+            {
+              "pattern": "^head\\b"
+            },
+            {
+              "pattern": "^mvn\\s+verify(\\s|$)"
+            },
+            {
+              "pattern": "^grep\\b"
+            },
+            {
+              "pattern": "^mvn\\s+dependency:tree(\\s|$)"
+            },
+            {
+              "pattern": "^git\\b"
+            },
+            {
+              "pattern": "^cat\\b"
+            },
+            {
+              "pattern": "^sed\\b"
+            },
+            {
+              "pattern": "^cd\\s+/Users/nshmakov/Sources/ticket/gateway-service(\\s|$)"
+            },
+            {
+              "pattern": "^mvn\\s+test-compile(\\s|$)"
+            },
+            {
+              "pattern": "^mvn\\s+clean(\\s|$)"
+            },
+            {
+              "pattern": "^GIT_EDITOR=true\\s+git\\s+commit(\\s|$)"
+            },
+            {
+              "pattern": "^cd\\s+/tmp(\\s|$)"
+            },
+            {
+              "pattern": "^jar\\s+tf(\\s|$)"
+            },
+            {
+              "pattern": "^jar\\s+xf(\\s|$)"
+            },
+            {
+              "pattern": "^diff\\s+/Users/nshmakov/Sources/ticket/gateway-service/src/test/resources/containers_new/order/create/ms_add_user\\.sql(\\s|$)"
+            },
+            {
+              "pattern": "^wc\\b"
+            },
+            {
+              "pattern": "^cut\\b"
+            },
+            {
+              "pattern": "^sort\\b"
+            },
+            {
+              "pattern": "^find\\s+\\~/\\.m2/repository/org/springframework/spring-test(\\s|$)"
+            },
+            {
+              "pattern": "^unzip\\b"
+            },
+            {
+              "pattern": "^echo\\b"
+            },
+            {
+              "pattern": "^ls\\s+cli/\\.venv/bin/(\\s|$)"
+            },
+            {
+              "pattern": "^go\\s+run(\\s|$)"
+            },
+            {
+              "pattern": "^go\\s+build(\\s|$)"
+            },
+            {
+              "pattern": "^python\\b"
+            }
+          ]
+        }
+      }
+    },
+    "inline_assistant_model": {
+      "provider": "openrouter",
+      "model": "deepseek/deepseek-v4-flash-0731",
+      "enable_thinking": false
+    },
+    "sidebar_side": "right",
+    "dock": "right",
+    "default_profile": "write",
+    "default_model": {
+      "provider": "openrouter",
+      "model": "deepseek/deepseek-v4-flash-0731",
+      "enable_thinking": true,
+    },
+    "favorite_models": [],
+    "model_parameters": [],
+  },
+  "language_models": {
+    "opencode": {
+      "show_go_models": false,
+      "show_free_models": false,
+      "show_zen_models": false,
+    },
+    "openai_compatible": {
+      "RouterAI": {
+        "api_url": "https://routerai.ru/api/v1",
+        "available_models": [
+          {
+            "name": "deepseek/deepseek-v4-pro",
+            "max_tokens": 1000000,
+            "max_output_tokens": 320000,
+            "max_completion_tokens": 200000,
+            "capabilities": {
+              "tools": true,
+              "images": false,
+              "parallel_tool_calls": false,
+              "prompt_cache_key": false,
+              "chat_completions": true,
+            },
+          },
+          {
+            "name": "deepseek/deepseek-v4-flash-0731",
+            "max_tokens": 1000000,
+            "max_output_tokens": 320000,
+            "max_completion_tokens": 200000,
+            "capabilities": {
+              "tools": true,
+              "images": false,
+              "parallel_tool_calls": false,
+              "prompt_cache_key": false,
+              "chat_completions": true,
+            },
+          },
+          {
+            "name": "minimax/minimax-m3",
+            "max_tokens": 1000000,
+            "max_output_tokens": 320000,
+            "max_completion_tokens": 200000,
+            "capabilities": {
+              "tools": true,
+              "images": true,
+              "parallel_tool_calls": false,
+              "prompt_cache_key": false,
+              "chat_completions": true,
+            },
+          },
+          {
+            "name": "qwen/qwen3.7-plus",
+            "max_tokens": 1000000,
+            "max_output_tokens": 320000,
+            "max_completion_tokens": 200000,
+            "capabilities": {
+              "tools": true,
+              "images": true,
+              "parallel_tool_calls": false,
+              "prompt_cache_key": false,
+              "chat_completions": true,
+            },
+          },
+          {
+            "name": "xiaomi/mimo-v2.5-pro",
+            "max_tokens": 1000000,
+            "max_output_tokens": 320000,
+            "max_completion_tokens": 200000,
+            "capabilities": {
+              "tools": true,
+              "images": false,
+              "parallel_tool_calls": false,
+              "prompt_cache_key": false,
+              "chat_completions": true,
+            },
+          },
+          {
+            "name": "xiaomi/mimo-v2.5",
+            "max_tokens": 1000000,
+            "max_output_tokens": 320000,
+            "max_completion_tokens": 200000,
+            "capabilities": {
+              "tools": true,
+              "images": true,
+              "parallel_tool_calls": false,
+              "prompt_cache_key": false,
+              "chat_completions": true,
+            },
+          },
+          {
+            "name": "z-ai/glm-5.2",
+            "max_tokens": 1000000,
+            "max_output_tokens": 320000,
+            "max_completion_tokens": 200000,
+            "capabilities": {
+              "tools": true,
+              "images": false,
+              "parallel_tool_calls": false,
+              "prompt_cache_key": false,
+              "chat_completions": true,
+            },
+          },
+          {
+            "name": "tencent/hy3",
+            "max_tokens": 262000,
+            "max_output_tokens": 320000,
+            "max_completion_tokens": 200000,
+            "capabilities": {
+              "tools": true,
+              "images": false,
+              "parallel_tool_calls": false,
+              "prompt_cache_key": false,
+              "chat_completions": true,
+            },
+          },
+        ],
+      },
+    },
+  },
+  "git_panel": {
+    "dock": "left",
+    "tree_view": false,
+  },
+  "agent_servers": {
+    "opencode": {
+      "default_config_options": {
+        "model": "opencode-go/qwen3.7-plus"
+      },
+      "type": "registry"
+    }
+  },
+  "git": {
+    "inline_blame": {
+      "enabled": false,
+    },
+  },
+  "languages": {
+    "Python": {
+      "preferred_line_length": 120,
+    },
+    "Java": {
+      "format_on_save": "off",
+      "inlay_hints": {
+        "enabled": true,
+      },
+      "preferred_line_length": 120,
+      "hard_tabs": false,
+      "tab_size": 4,
+    }
+  },
+  "ui_font_size": 15.0,
+  "buffer_font_size": 13.0,
+  "theme": {
+    "mode": "dark",
+    "light": "One Light",
+    "dark": "One Dark"
+  },
+  "lsp": {
+    "jdtls": {
+      "initialization_options": {
+        "settings": {
+          "java": {
+            "symbols": {
+              "includeSourceMethodDeclarations": true
+            },
+            "configuration": {
+              "runtimes": [
+                {
+                  "name": "JavaSE-1.8",
+                  "path": "~/.sdkman/candidates/java/8.0.492-tem/"
+                },
+                {
+                  "name": "JavaSE-17",
+                  "path": "~/.sdkman/candidates/java/17.0.19-tem/"
+                },
+                {
+                  "name": "JavaSE-21",
+                  "path": "~/.sdkman/candidates/java/21.0.11-tem/"
+                }
+              ]
+            }
+          },
+        },
+      },
+      "settings": {
+        "max_memory": "5G",
+      }
+    },
+    "yaml-language-server": {
+      "settings": {
+        "yaml": {
+          "schemaStore": {
+            "enable": false
+          }
+        }
+      }
+    }
+  }
+}

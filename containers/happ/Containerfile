@@ -1,0 +1,3 @@
+FROM registry.fedoraproject.org/fedora-toolbox:44
+RUN dnf update -y && dnf install -y libXcomposite libXdamage libXfixes libXrandr libXtst alsa-lib atk nspr nss libglvnd-glx mesa-libGL mesa-libEGL libglvnd-opengl fontconfig
+RUN wget https://github.com/Happ-proxy/happ-desktop/releases/latest/download/Happ.linux.x64.rpm && dnf install -y Happ.linux.x64.rpm

@@ -1,0 +1,68 @@
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
+
+# User specific environment
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+if [ -d ~/.bashrc.d ]; then
+    for rc in ~/.bashrc.d/*; do
+        if [ -f "$rc" ]; then
+            . "$rc"
+        fi
+    done
+fi
+unset rc
+
+# bash history
+shopt -s histappend
+export HISTSIZE=10000
+export HISTFILESIZE=20000
+export HISTCONTROL=ignoreboth
+export HISTIGNORE="ls:ls *:cd *:pwd:exit:clear:opencode:git status;git branch"
+export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+
+# export PS1="\[\e[0;36m\]\\w \\$ \[\e[0m\]"
+export EDITOR="nano"
+
+function podmanClean {
+  podman ps -a | tail -n +2 | awk '{ print $1 }' | xargs podman rm -f
+}
+alias podman-clean='podmanClean && yes | podman system prune --volumes'
+
+function podmanImagesClean {
+  podman image ls -a |  tail -n +2 | awk '{ print $3 }' | xargs podman rmi -f
+}
+alias podman-images-clean='podmanImagesClean'
+
+function gitClean {
+  git checkout master; git branch | grep -v master | grep -v release | grep -v develop | grep -v main | xargs git branch -D
+}
+alias git-clean=gitClean
+
+function gitCommit {
+  task=$(git branch --show-current | grep -Eo "DEV-[0-9]+") && git commit -m "$task $1"
+}
+alias git-commit=gitCommit
+
+function gitAddAndCommit {
+  task=$(git branch --show-current | grep -Eo "DEV-[0-9]+") && git add . && git commit -m "$task $1"
+}
+alias git-add-and-commit=gitAddAndCommit
+
+function proxyActivate {
+  export HTTP_PROXY=http://127.0.0.1:10809
+  export HTTPS_PROXY=http://127.0.0.1:10809
+  export NO_PROXY=localhost,127.0.0.1
+}
+alias proxy-activate=proxyActivate
+
+alias edit="flatpak run org.gnome.TextEditor"

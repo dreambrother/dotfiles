@@ -1,0 +1,54 @@
+app-id: su.happ.Happ
+runtime: org.fedoraproject.Platform
+runtime-version: 'f44'
+sdk: org.fedoraproject.Sdk
+command: Happ
+separate-locales: false
+
+finish-args:
+  - --share=network
+  - --socket=x11
+  - --socket=wayland
+  - --device=dri
+  - --socket=pulseaudio
+  - --talk-name=org.freedesktop.Notifications
+
+modules:
+  - name: happ
+    buildsystem: simple
+    build-commands:
+      # 1. Распаковываем RPM-пакет
+      - rpm2cpio Happ.linux.x64.rpm | cpio -idmv -D /app/
+      
+      # 2. Создаем директорию для бинарников Flatpak
+      - mkdir -p /app/bin
+      
+      # 3. АВТОПОИСК БИНАРНИКА: Ищем файл Happ (в любом регистре) и делаем жесткую ссылку в /app/bin/Happ
+      - find /app -type f -iname "happ" -exec ln -sf {} /app/bin/Happ \;
+      
+      # 4. Создаем структуру для ярлыков и иконок
+      - mkdir -p /app/share/applications /app/share/icons/hicolor/256x256/apps
+      
+      # 5. АВТОПОИСК ИКОНКИ: Ищем любую иконку happ.png или Happ.png и копируем в нужное место
+      - find /app -name "*happ*.png" -exec cp {} /app/share/icons/hicolor/256x256/apps/su.happ.Happ.png \;
+      
+      # 6. ГЕНЕРАЦИЯ ЯРЛЫКА: Создаем чистый .desktop файл, чтобы не зависеть от оригинального
+      - |
+        cat << 'EOF' > /app/share/applications/su.happ.Happ.desktop
+        [Desktop Entry]
+        Name=Happ
+        Exec=Happ
+        Terminal=false
+        Type=Application
+        Icon=su.happ.Happ
+        StartupWMClass=Happ
+        Categories=Network;Proxy;
+        Comment=Happ Proxy Utility
+        EOF
+
+      # 7. Очищаем временные системные папки от RPM
+      - rm -rf /app/usr /app/usr.lib
+    sources:
+      - type: file
+        path: Happ.linux.x64.rpm
+

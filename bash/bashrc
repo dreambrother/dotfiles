@@ -27,8 +27,7 @@ shopt -s histappend
 export HISTSIZE=10000
 export HISTFILESIZE=20000
 export HISTCONTROL=ignoreboth
-export HISTIGNORE="ls:pwd:exit:clear:opencode:git status:git branch"
-export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+export HISTIGNORE="ls:pwd:exit:clear:opencode:git status:git branch:edit-fzf"
 
 # export PS1="\[\e[0;36m\]\\w \\$ \[\e[0m\]"
 export EDITOR="nano"
@@ -66,3 +65,7 @@ function proxyActivate {
 alias proxy-activate=proxyActivate
 
 alias edit="flatpak run org.gnome.TextEditor"
+alias edit-fzf='edit $(fzf)'
+alias nano-fzf='nano $(fzf)'
+
+command -v fzf >/dev/null 2>&1 && eval "$(fzf --bash)"

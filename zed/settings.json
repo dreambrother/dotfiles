@@ -7,6 +7,11 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "icon_theme": "Zed (Default)",
+  // "ui_font_size": 16,
+  // "buffer_font_size": 15,
+  "use_podman": true,
+
   // "proxy": "socks5h://127.0.0.1:10808",
   "edit_predictions": {
     "mode": "subtle",
@@ -247,19 +252,6 @@
               "chat_completions": true,
             },
           },
-          {
-            "name": "tencent/hy3",
-            "max_tokens": 262000,
-            "max_output_tokens": 320000,
-            "max_completion_tokens": 200000,
-            "capabilities": {
-              "tools": true,
-              "images": false,
-              "parallel_tool_calls": false,
-              "prompt_cache_key": false,
-              "chat_completions": true,
-            },
-          },
         ],
       },
     },
@@ -267,14 +259,6 @@
   "git_panel": {
     "dock": "left",
     "tree_view": false,
-  },
-  "agent_servers": {
-    "opencode": {
-      "default_config_options": {
-        "model": "opencode-go/qwen3.7-plus"
-      },
-      "type": "registry"
-    }
   },
   "git": {
     "inline_blame": {

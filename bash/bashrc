@@ -13,16 +13,6 @@ export PATH
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
 
-# User specific aliases and functions
-if [ -d ~/.bashrc.d ]; then
-    for rc in ~/.bashrc.d/*; do
-        if [ -f "$rc" ]; then
-            . "$rc"
-        fi
-    done
-fi
-unset rc
-
 # bash history
 shopt -s histappend
 export HISTSIZE=10000
@@ -32,16 +22,6 @@ export HISTIGNORE="ls:pwd:exit:clear:opencode:git status:git branch:edit-fzf"
 
 # export PS1="\[\e[0;36m\]\\w \\$ \[\e[0m\]"
 export EDITOR="nano"
-
-function podmanClean {
-  podman ps -a | tail -n +2 | awk '{ print $1 }' | xargs podman rm -f
-}
-alias podman-clean='podmanClean && yes | podman system prune --volumes'
-
-function podmanImagesClean {
-  podman image ls -a |  tail -n +2 | awk '{ print $3 }' | xargs podman rmi -f
-}
-alias podman-images-clean='podmanImagesClean'
 
 function gitClean {
   git checkout master; git branch | grep -v master | grep -v release | grep -v develop | grep -v main | xargs git branch -D
@@ -68,6 +48,16 @@ alias proxy-activate=proxyActivate
 alias edit="flatpak run org.gnome.TextEditor"
 alias edit-fzf='edit $(fzf)'
 alias nano-fzf='nano $(fzf)'
+alias start-devcontainers='podman start $(podman ps -a --filter "label=devcontainer.local_folder" --filter "status=exited" -q)'
 
 command -v fzf >/dev/null 2>&1 && eval "$(fzf --bash)"
 
+# User specific aliases and functions
+if [ -d ~/.bashrc.d ]; then
+    for rc in ~/.bashrc.d/*; do
+        if [ -f "$rc" ]; then
+            . "$rc"
+        fi
+    done
+fi
+unset rc

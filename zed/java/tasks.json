@@ -1,0 +1,28 @@
+[
+  {
+    "label": "$ZED_CUSTOM_java_class_name.${ZED_CUSTOM_java_outer_class_name:}.$ZED_CUSTOM_java_method_name",
+    "command": "package=\"${ZED_CUSTOM_java_package_name:-}\"; outer=\"${ZED_CUSTOM_java_outer_class_name:-}\"; inner=\"$ZED_CUSTOM_java_class_name\"; method=\"$ZED_CUSTOM_java_method_name\"; sep=\"$\"; if [ -n \"$outer\" ]; then c=\"$outer$sep$inner\"; else c=\"$inner\"; fi; if [ -n \"$package\" ]; then fqc=\"$package.$c\"; else fqc=\"$c\"; fi; f=\"$ZED_FILE\"; p=\"$PWD\"; d=$(dirname \"${f#$p/}\"); if [ -f pom.xml ]; then m=\".\"; md=\"$d\"; while [ \"$md\" != \".\" ] && [ \"$md\" != \"/\" ]; do if [ -f \"$md/pom.xml\" ]; then m=\"$md\"; break; fi; md=$(dirname \"$md\"); done; [ -f ./mvnw ] && CMD=\"./mvnw\" || CMD=\"mvn\"; if [ \"$m\" = \".\" ]; then $CMD clean test -Dtest=\"$fqc#$method\"; else $CMD clean test-compile -pl \"$m\" -am && $CMD test -pl \"$m\" -Dtest=\"$fqc#$method\"; fi; elif [ -f build.gradle ] || [ -f build.gradle.kts ] || [ -f settings.gradle ] || [ -f settings.gradle.kts ]; then m=\".\"; md=\"$d\"; while [ \"$md\" != \".\" ] && [ \"$md\" != \"/\" ]; do if [ -f \"$md/build.gradle\" ] || [ -f \"$md/build.gradle.kts\" ]; then m=\"$md\"; break; fi; md=$(dirname \"$md\"); done; if [ \"$m\" = \".\" ]; then mp=\"\"; else mp=\":$(echo \"$m\" | tr '/' ':')\"; fi; [ -f ./gradlew ] && CMD=\"./gradlew\" || CMD=\"gradle\"; $CMD ${mp}:test --tests \"$fqc.$method\"; else >&2 echo 'No build tool found'; exit 1; fi;",
+    "use_new_terminal": false,
+    "reveal": "always",
+    "tags": ["java-test-method", "java-test-method-nested"],
+    "shell": {
+      "with_arguments": {
+        "program": "toolbox",
+        "args": ["run", "-c", "java-dev", "/bin/sh"],
+      },
+    },
+  },
+  {
+    "label": "Test class $ZED_CUSTOM_java_class_name",
+    "command": "package=\"${ZED_CUSTOM_java_package_name:-}\"; outer=\"${ZED_CUSTOM_java_outer_class_name:-}\"; inner=\"$ZED_CUSTOM_java_class_name\"; sep=\"$\"; if [ -n \"$outer\" ]; then c=\"$outer$sep$inner\"; else c=\"$inner\"; fi; if [ -n \"$package\" ]; then fqc=\"$package.$c\"; else fqc=\"$c\"; fi; f=\"$ZED_FILE\"; p=\"$PWD\"; d=$(dirname \"${f#$p/}\"); if [ -f pom.xml ]; then m=\".\"; md=\"$d\"; while [ \"$md\" != \".\" ] && [ \"$md\" != \"/\" ]; do if [ -f \"$md/pom.xml\" ]; then m=\"$md\"; break; fi; md=$(dirname \"$md\"); done; [ -f ./mvnw ] && CMD=\"./mvnw\" || CMD=\"mvn\"; if [ \"$m\" = \".\" ]; then $CMD clean test -Dtest=\"$fqc\"; else $CMD clean test-compile -pl \"$m\" -am && $CMD test -pl \"$m\" -Dtest=\"$fqc\"; fi; elif [ -f build.gradle ] || [ -f build.gradle.kts ] || [ -f settings.gradle ] || [ -f settings.gradle.kts ]; then m=\".\"; md=\"$d\"; while [ \"$md\" != \".\" ] && [ \"$md\" != \"/\" ]; do if [ -f \"$md/build.gradle\" ] || [ -f \"$md/build.gradle.kts\" ]; then m=\"$md\"; break; fi; md=$(dirname \"$md\"); done; if [ \"$m\" = \".\" ]; then mp=\"\"; else mp=\":$(echo \"$m\" | tr '/' ':')\"; fi; [ -f ./gradlew ] && CMD=\"./gradlew\" || CMD=\"gradle\"; $CMD ${mp}:test --tests \"$fqc\"; else >&2 echo 'No build tool found'; exit 1; fi;",
+    "use_new_terminal": false,
+    "reveal": "always",
+    "tags": ["java-test-class", "java-test-class-nested"],
+    "shell": {
+      "with_arguments": {
+        "program": "toolbox",
+        "args": ["run", "-c", "java-dev", "/bin/sh"],
+      },
+    },
+  },
+]

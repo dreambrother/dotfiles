@@ -12,10 +12,10 @@
   // "buffer_font_size": 15,
   "use_podman": true,
 
-  // "proxy": "socks5h://127.0.0.1:10808",
+  "proxy": "socks5h://127.0.0.1:10808",
   "edit_predictions": {
     "mode": "subtle",
-    "provider": "zed"
+    "provider": "zed",
   },
   "diff_view_style": "split",
   "show_edit_predictions": true,
@@ -25,13 +25,13 @@
   "project_panel": {
     "starts_open": true,
     "auto_reveal_entries": true,
-    "dock": "left"
+    "dock": "left",
   },
   "outline_panel": {
-    "dock": "left"
+    "dock": "left",
   },
   "collaboration_panel": {
-    "dock": "left"
+    "dock": "left",
   },
   "agent": {
     "tool_permissions": {
@@ -39,106 +39,106 @@
         "terminal": {
           "always_allow": [
             {
-              "pattern": "^poetry\\s+run(\\s|$)"
+              "pattern": "^poetry\\s+run(\\s|$)",
             },
             {
-              "pattern": "^mvn\\s+compile(\\s|$)"
+              "pattern": "^mvn\\s+compile(\\s|$)",
             },
             {
-              "pattern": "^tail\\b"
+              "pattern": "^tail\\b",
             },
             {
-              "pattern": "^mvn\\s+test(\\s|$)"
+              "pattern": "^mvn\\s+test(\\s|$)",
             },
             {
-              "pattern": "^ls\\b"
+              "pattern": "^ls\\b",
             },
             {
-              "pattern": "^cat\\s+target/surefire-reports/\\*\\.txt(\\s|$)"
+              "pattern": "^cat\\s+target/surefire-reports/\\*\\.txt(\\s|$)",
             },
             {
-              "pattern": "^head\\b"
+              "pattern": "^head\\b",
             },
             {
-              "pattern": "^mvn\\s+verify(\\s|$)"
+              "pattern": "^mvn\\s+verify(\\s|$)",
             },
             {
-              "pattern": "^grep\\b"
+              "pattern": "^grep\\b",
             },
             {
-              "pattern": "^mvn\\s+dependency:tree(\\s|$)"
+              "pattern": "^mvn\\s+dependency:tree(\\s|$)",
             },
             {
-              "pattern": "^git\\b"
+              "pattern": "^git\\b",
             },
             {
-              "pattern": "^cat\\b"
+              "pattern": "^cat\\b",
             },
             {
-              "pattern": "^sed\\b"
+              "pattern": "^sed\\b",
             },
             {
-              "pattern": "^cd\\s+/Users/nshmakov/Sources/ticket/gateway-service(\\s|$)"
+              "pattern": "^cd\\s+/Users/nshmakov/Sources/ticket/gateway-service(\\s|$)",
             },
             {
-              "pattern": "^mvn\\s+test-compile(\\s|$)"
+              "pattern": "^mvn\\s+test-compile(\\s|$)",
             },
             {
-              "pattern": "^mvn\\s+clean(\\s|$)"
+              "pattern": "^mvn\\s+clean(\\s|$)",
             },
             {
-              "pattern": "^GIT_EDITOR=true\\s+git\\s+commit(\\s|$)"
+              "pattern": "^GIT_EDITOR=true\\s+git\\s+commit(\\s|$)",
             },
             {
-              "pattern": "^cd\\s+/tmp(\\s|$)"
+              "pattern": "^cd\\s+/tmp(\\s|$)",
             },
             {
-              "pattern": "^jar\\s+tf(\\s|$)"
+              "pattern": "^jar\\s+tf(\\s|$)",
             },
             {
-              "pattern": "^jar\\s+xf(\\s|$)"
+              "pattern": "^jar\\s+xf(\\s|$)",
             },
             {
-              "pattern": "^diff\\s+/Users/nshmakov/Sources/ticket/gateway-service/src/test/resources/containers_new/order/create/ms_add_user\\.sql(\\s|$)"
+              "pattern": "^diff\\s+/Users/nshmakov/Sources/ticket/gateway-service/src/test/resources/containers_new/order/create/ms_add_user\\.sql(\\s|$)",
             },
             {
-              "pattern": "^wc\\b"
+              "pattern": "^wc\\b",
             },
             {
-              "pattern": "^cut\\b"
+              "pattern": "^cut\\b",
             },
             {
-              "pattern": "^sort\\b"
+              "pattern": "^sort\\b",
             },
             {
-              "pattern": "^find\\s+\\~/\\.m2/repository/org/springframework/spring-test(\\s|$)"
+              "pattern": "^find\\s+\\~/\\.m2/repository/org/springframework/spring-test(\\s|$)",
             },
             {
-              "pattern": "^unzip\\b"
+              "pattern": "^unzip\\b",
             },
             {
-              "pattern": "^echo\\b"
+              "pattern": "^echo\\b",
             },
             {
-              "pattern": "^ls\\s+cli/\\.venv/bin/(\\s|$)"
+              "pattern": "^ls\\s+cli/\\.venv/bin/(\\s|$)",
             },
             {
-              "pattern": "^go\\s+run(\\s|$)"
+              "pattern": "^go\\s+run(\\s|$)",
             },
             {
-              "pattern": "^go\\s+build(\\s|$)"
+              "pattern": "^go\\s+build(\\s|$)",
             },
             {
-              "pattern": "^python\\b"
-            }
-          ]
-        }
-      }
+              "pattern": "^python\\b",
+            },
+          ],
+        },
+      },
     },
     "inline_assistant_model": {
       "provider": "openrouter",
       "model": "deepseek/deepseek-v4-flash-0731",
-      "enable_thinking": false
+      "enable_thinking": false,
     },
     "sidebar_side": "right",
     "dock": "right",
@@ -264,7 +264,7 @@
               "prompt_cache_key": false,
               "chat_completions": true,
             },
-          }
+          },
         ],
       },
     },
@@ -290,38 +290,24 @@
       "preferred_line_length": 120,
       "hard_tabs": false,
       "tab_size": 4,
-    }
+    },
   },
   "ui_font_size": 15.0,
   "buffer_font_size": 13.0,
   "theme": {
     "mode": "dark",
     "light": "One Light",
-    "dark": "One Dark"
+    "dark": "One Dark",
   },
   "lsp": {
-    "jdtls": {
-      "initialization_options": {
-        "settings": {
-          "java": {
-            "symbols": {
-              "includeSourceMethodDeclarations": true
-            },
-          },
-        },
-      },
-      "settings": {
-        "max_memory": "5G",
-      }
-    },
     "yaml-language-server": {
       "settings": {
         "yaml": {
           "schemaStore": {
-            "enable": false
-          }
-        }
-      }
-    }
-  }
+            "enable": false,
+          },
+        },
+      },
+    },
+  },
 }

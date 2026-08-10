@@ -1,0 +1,43 @@
+{
+  "lsp": {
+    "jdtls": {
+      "initialization_options": {
+        "settings": {
+          "java": {
+            "symbols": {
+             "includeSourceMethodDeclarations": true,
+            },
+            "configuration": {
+              "runtimes": [
+                {
+                  "name": "JavaSE-1.8",
+                  "path": "~/.sdkman/candidates/java/8.0.502-tem/"
+                },
+                {
+                  "name": "JavaSE-17",
+                  "path": "~/.sdkman/candidates/java/17.0.20-tem/"
+                },
+                {
+                  "name": "JavaSE-21",
+                  "path": "~/.sdkman/candidates/java/21.0.12-tem/"
+                }
+              ]
+            }
+          }
+        },
+      },
+      "settings": {
+        "java_home": "~/.sdkman/candidates/java/21.0.12-tem/",
+        "max_memory": "5G"
+      }
+    },
+  },
+  "terminal": {
+    "shell": {
+      "with_arguments": {
+        "program": "toolbox",
+        "args": ["enter", "java-dev"]
+      }
+    }
+  },
+}

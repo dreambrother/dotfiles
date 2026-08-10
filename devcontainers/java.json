@@ -1,0 +1,30 @@
+{
+    "name": "Java $module dev container",
+    "image": "mcr.microsoft.com/devcontainers/java:21",
+    "remoteUser": "vscode",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/vscode/sources/$project/$module,type=bind,consistency=cached",
+    "workspaceFolder": "/home/vscode/sources/$project/gateway-svc",
+    "mounts": [
+        "source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached",
+        "source=${localEnv:SSH_AUTH_SOCK:-},target=/tmp/ssh-agent.socket,type=bind,consistency=cached",
+        "source=${localEnv:HOME}/.m2,target=/home/vscode/.m2,type=bind,consistency=cached",
+        "source=${localEnv:HOME}/sources/$project/.gitconfig-$project,target=/home/vscode/sources/$project/.gitconfig$project,type=bind,consistency=cached",
+        "source=${localEnv:XDG_RUNTIME_DIR}/podman/podman.sock,target=${localEnv:XDG_RUNTIME_DIR}/podman/podman.sock,type=bind"
+    ],
+    "containerEnv": {
+        "SSH_AUTH_SOCK": "/tmp/ssh-agent.socket",
+        "DOCKER_HOST": "unix://${localEnv:XDG_RUNTIME_DIR}/podman/podman.sock",
+        "ALL_PROXY": "socks5h://127.0.0.1:10808",
+        "HTTP_PROXY": "http://127.0.0.1:10809",
+        "HTTPS_PROXY": "http://127.0.0.1:10809",
+        "NO_PROXY": "localhost,127.0.0.1,::1,127.0.0.0/8"
+    },
+    "runArgs": [
+        "--label", "dc.project=$project",
+        "--userns=keep-id",
+        "--security-opt", "label=disable",
+        "--security-opt", "unmask=all",
+        "--network=host"
+    ],
+    "postCreateCommand": "sudo apt update && sudo apt install -y maven"
+}

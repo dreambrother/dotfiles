@@ -1,3 +1,4 @@
 FROM registry.fedoraproject.org/fedora-toolbox:44
-RUN dnf update -y && dnf install -y libXcomposite libXdamage libXfixes libXrandr libXtst alsa-lib atk nspr nss libglvnd-glx mesa-libGL mesa-libEGL libglvnd-opengl fontconfig
+# basic ui layer
+RUN sed -i 's/^enabled=1/enabled=0/' /etc/yum.repos.d/fedora-cisco-openh264.repo && dnf install -y libXcomposite libXdamage libXfixes libXrandr libXtst alsa-lib atk at-spi2-atk at-spi2-core dbus-libs libxkbcommon expat libX11 libXext fontconfig gtk3 cairo pango nspr nss libglvnd-glx mesa-libGL mesa-libEGL libglvnd-opengl && dnf clean all
 RUN wget https://github.com/Happ-proxy/happ-desktop/releases/latest/download/Happ.linux.x64.rpm && dnf install -y Happ.linux.x64.rpm

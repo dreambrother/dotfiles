@@ -162,7 +162,7 @@
         "api_url": "https://routerai.ru/api/v1",
         "available_models": [
           {
-            "name": "deepseek/deepseek-v4-pro",
+            "name": "deepseek/deepseek-v4-pro-0813",
             "max_tokens": 1000000,
             "max_output_tokens": 320000,
             "max_completion_tokens": 200000,

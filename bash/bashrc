@@ -49,6 +49,7 @@ alias proxy-activate=proxyActivate
 alias edit="flatpak run org.gnome.TextEditor"
 alias edit-fzf='edit $(fzf)'
 alias nano-fzf='nano $(fzf)'
+alias chrome-testing='toolbox run -c dev-utils chrome'
 
 function devcontainersStart {
     podman start $(podman ps -a --filter "label=$1" --filter "status=exited" -q) 2>/dev/null
@@ -69,6 +70,11 @@ function devcontainersClean {
     podman stop $(podman ps -a --filter "label=$1" --filter "status=exited" -q) 2>/dev/null
 }
 alias dc-clean=devcontainersClean
+
+function testcontainersClean {
+    podman rm -f $(podman ps -a --filter "label=org.testcontainers" -q) 2>/dev/null
+}
+alias tc-clean=testcontainersClean
 
 command -v fzf >/dev/null 2>&1 && eval "$(fzf --bash)"
 

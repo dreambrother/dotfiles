@@ -5,6 +5,14 @@
 - **Thinking/Reasoning:** ONLY in English (internal monologue, analysis, planning)
 - **Responses to user:** ONLY in Russian
 
+## Docker Environment (MANDATORY)
+
+- **Docker IS configured and available** for running tests/containers. Do NOT
+  refuse to run tests claiming Docker is not set up.
+- Setup: Docker is provided via **podman** on the host, and the `DOCKER_HOST`
+  is exposed inside **toolbox**. If the `docker` command is missing in the
+  current shell, use `podman` directly (or run commands inside toolbox).
+
 ## Change Authorization (MANDATORY)
 
 - **Do NOT make any code change** (edit, write, delete, rename, or run

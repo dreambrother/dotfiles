@@ -17,7 +17,7 @@
             "output": ["text"],
           },
         },
-        "deepseek/deepseek-v4-pro": { "name": "DeepSeek V4 Pro" },
+        "deepseek/deepseek-v4-pro-0813": { "name": "DeepSeek V4 Pro 0831" },
         "deepseek/deepseek-v4-flash-0731": { "name": "DeepSeek V4 Flash 0731" },
         "xiaomi/mimo-v2.5-pro": { "name": "MiMo V2.5 Pro" },
         "xiaomi/mimo-v2.5": {
@@ -55,7 +55,10 @@
     },
     "chrome-devtools": {
       "type": "local",
-      "command": ["npx", "-y", "chrome-devtools-mcp@latest"],
+      "command": [
+        "toolbox", "run", "-c", "dev-utils",
+        "/bin/sh", "-c", "npx -y chrome-devtools-mcp@latest --no-usage-statistics"
+      ],
       "enabled": true,
     },
   },

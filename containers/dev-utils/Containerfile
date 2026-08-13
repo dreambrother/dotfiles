@@ -1,0 +1,12 @@
+FROM registry.fedoraproject.org/fedora-toolbox:44
+
+# basic ui layer
+RUN sed -i 's/^enabled=1/enabled=0/' /etc/yum.repos.d/fedora-cisco-openh264.repo && dnf install -y libXcomposite libXdamage libXfixes libXrandr libXtst alsa-lib atk at-spi2-atk at-spi2-core dbus-libs libxkbcommon expat libX11 libXext fontconfig gtk3 cairo pango nspr nss libglvnd-glx mesa-libGL mesa-libEGL libglvnd-opengl && dnf clean all
+
+# chrome devtools
+RUN dnf install -y cups-libs mesa-libgbm libdrm npm && dnf clean all
+RUN mkdir -p /opt/dev && npx -y @puppeteer/browsers install chrome@stable --path /opt/dev
+RUN ln -s /opt/dev/chrome/linux-*/chrome-linux64/chrome /usr/local/bin/chrome \
+    && ln -s /opt/dev/chrome/linux-*/chrome-linux64/chrome /usr/bin/google-chrome-stable \
+    && mkdir -p /opt/google/chrome \
+    && ln -s /opt/dev/chrome/linux-*/chrome-linux64/chrome /opt/google/chrome/chrome

@@ -1,5 +1,6 @@
 {
   "$schema": "https://opencode.ai/tui.json",
   //"scroll_speed": 0.15,
-  //"scroll_acceleration": { "enabled": false }
+  //"scroll_acceleration": { "enabled": false },
+  "plugin": ["./tui-plugins/gnome-notify.js"],
 }

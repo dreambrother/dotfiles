@@ -61,13 +61,18 @@ function devcontainersStop {
 }
 alias dc-stop=devcontainersStop
 
+function devcontainersStopAll {
+    podman stop $(podman ps -a --filter "label=devcontainer.local_folder" --filter "status=running" -q) 2>/dev/null
+}
+alias dc-stop-all=devcontainersStopAll
+
 function devcontainersCleanAll {
-    podman stop $(podman ps -a --filter "label=devcontainer.local_folder" --filter "status=exited" -q) 2>/dev/null
+    podman rm -f $(podman ps -a --filter "label=devcontainer.local_folder" --filter "status=exited" -q) 2>/dev/null
 }
 alias dc-clean-all=devcontainersCleanAll
 
 function devcontainersClean {
-    podman stop $(podman ps -a --filter "label=$1" --filter "status=exited" -q) 2>/dev/null
+    podman rm -f $(podman ps -a --filter "label=$1" --filter "status=exited" -q) 2>/dev/null
 }
 alias dc-clean=devcontainersClean
 

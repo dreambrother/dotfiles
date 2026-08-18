@@ -17,8 +17,8 @@
   the current shell lacks the tool the command needs (e.g. `mvn`, `npm`,
   `docker`), do not stop and ask — automatically re-run via
   `toolbox run -c <appropriate-toolbox> -- <command>`. Match the toolbox to
-  the stack: `java-dev` for Maven/Gradle, `fe-dev` for JS/npm, `go-dev` for
-  Go, `dev-utils` for misc system tools. Do NOT manually probe sockets or
+  the stack: `java-dev` for Maven/Gradle, `go-dev` for
+  Go, etc. Do NOT manually probe sockets or
   invoke the host's `/run/host/usr/bin/podman` — it will fail due to missing
   host libraries.
 - **Do NOT refuse to run tests** claiming Docker is not set up. Docker is

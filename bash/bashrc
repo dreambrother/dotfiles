@@ -50,6 +50,7 @@ alias edit="flatpak run org.gnome.TextEditor"
 alias edit-fzf='edit $(fzf)'
 alias nano-fzf='nano $(fzf)'
 alias chrome-testing='toolbox run -c dev-utils chrome'
+alias docx2pdf='toolbox run -c sys-utils -- env SAL_USE_VCLPLUGIN=svp soffice --headless --convert-to pdf --outdir "$(dirname -- "$1")" "$1"'
 
 function devcontainersStart {
     podman start $(podman ps -a --filter "label=$1" --filter "status=exited" -q) 2>/dev/null

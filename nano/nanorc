@@ -3,3 +3,4 @@ set mouse
 set autoindent
 set tabstospaces
 set tabsize 4
+include ~/.nano.d/Containerfile.nanorc

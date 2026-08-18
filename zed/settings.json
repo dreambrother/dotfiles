@@ -144,9 +144,9 @@
     "dock": "right",
     "default_profile": "write",
     "default_model": {
-      "provider": "RouterAI",
-      "model": "deepseek/deepseek-v4-flash-0731",
-      "enable_thinking": false,
+      "provider": "openrouter",
+      "model": "z-ai/glm-5.2",
+      "enable_thinking": true,
     },
     "favorite_models": [],
     "model_parameters": [],

@@ -5,13 +5,26 @@
 - **Thinking/Reasoning:** ONLY in English (internal monologue, analysis, planning)
 - **Responses to user:** ONLY in Russian
 
-## Docker Environment (MANDATORY)
+## Environment & Running Commands (MANDATORY)
 
-- **Docker IS configured and available** for running tests/containers. Do NOT
-  refuse to run tests claiming Docker is not set up.
-- Setup: Docker is provided via **podman** on the host, and the `DOCKER_HOST`
-  is exposed inside **toolbox**. If the `docker` command is missing in the
-  current shell, use `podman` directly (or run commands inside toolbox).
+- **The build/test environment is already configured.** Do NOT investigate
+  the environment (searching for `docker`, `podman`, probing sockets, listing
+  toolboxes, checking `JAVA_HOME`, etc.) before running build/test/lint
+  commands. Just run the requested command directly (`mvn ...`, `npm ...`,
+  `gradle ...`). `DOCKER_HOST` and other required env vars are already set in
+  the current shell; testcontainers works out of the box.
+- The user may forget to enter a toolbox before asking to run a command. If
+  the current shell lacks the tool the command needs (e.g. `mvn`, `npm`,
+  `docker`), do not stop and ask — automatically re-run via
+  `toolbox run -c <appropriate-toolbox> -- <command>`. Match the toolbox to
+  the stack: `java-dev` for Maven/Gradle, `fe-dev` for JS/npm, `go-dev` for
+  Go, `dev-utils` for misc system tools. Do NOT manually probe sockets or
+  invoke the host's `/run/host/usr/bin/podman` — it will fail due to missing
+  host libraries.
+- **Do NOT refuse to run tests** claiming Docker is not set up. Docker is
+  provided via podman on the host and exposed inside toolbox through
+  `DOCKER_HOST`. The only valid reason to not run a command is an explicit
+  failure you cannot resolve.
 
 ## Change Authorization (MANDATORY)
 

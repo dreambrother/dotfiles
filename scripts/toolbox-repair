@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+#
+# toolbox-repair — перезапуск застрявших toolbox-контейнеров.
+#
+# Использование:
+#   toolbox-repair [CONTAINER...]    без аргументов — все toolbox-контейнеры
+#   toolbox-repair -h, --help        справка
+#
+# Алгоритм для каждого контейнера:
+#   1. podman kill (SIGTERM) → если не вышло, kill -9 init-pid (бита песочница)
+#   2. podman container cleanup — снять битый runtime-state
+#   3. podman start — поднять заново
+#   4. проверка exec: toolbox run --container NAME id
+#
+set -euo pipefail
+
+readonly PROG="${0##*/}"
+
+usage() {
+    cat <<EOF
+Использование: $PROG [CONTAINER...]
+Без аргументов — починить все toolbox-контейнеры.
+EOF
+}
+
+log()  { printf '%s[%s]\033[0m %s\n' "$1" "$PROG" "$2" >&2; }
+info() { log '\033[1;34m' "$*"; }
+ok()   { log '\033[1;32m' "$*"; }
+warn() { log '\033[1;33m' "$*"; }
+err()  { log '\033[1;31m' "$*"; }
+
+# Список контейнеров для обработки
+if [[ "${1-}" == "-h" || "${1-}" == "--help" ]]; then
+    usage; exit 0
+fi
+
+if [[ $# -gt 0 ]]; then
+    containers=("$@")
+else
+    mapfile -t containers < <(
+        podman ps -a \
+            --filter 'label=com.github.containers.toolbox=true' \
+            --format '{{.Names}}' || true
+    )
+    if [[ ${#containers[@]} -eq 0 ]]; then
+        err "toolbox-контейнеры не найдены"; exit 1
+    fi
+fi
+
+repaired=0
+failed=0
+
+for c in "${containers[@]}"; do
+    info "=== $c ==="
+
+    state=$(podman inspect "$c" --format '{{.State.Status}}' 2>/dev/null || echo "missing")
+    if [[ "$state" == "missing" ]]; then
+        err "контейнер не найден, пропуск"; failed=$((failed+1)); continue
+    fi
+
+    pid=$(podman inspect "$c" --format '{{.State.Pid}}' 2>/dev/null || echo "0")
+    info "состояние: $state (init pid=${pid})"
+
+    # 1. Остановить. Сначала пробуем штатно, потом — kill -9 init-pid.
+    if [[ "$state" == "running" || "$state" == "stopping" ]]; then
+        if podman kill "$c" >/dev/null 2>&1; then
+            ok "podman kill — OK"
+        else
+            warn "podman kill не сработал, пробую kill -9 init-pid ($pid)"
+            if [[ "$pid" -gt 1 ]] && kill -0 "$pid" 2>/dev/null; then
+                if kill -9 "$pid" 2>/dev/null; then
+                    ok "init-pid убит"
+                    sleep 1
+                else
+                    err "не удалось убить init-pid $pid"
+                fi
+            else
+                warn "init-pid не жив ($pid) — продолжаю к cleanup"
+            fi
+        fi
+    else
+        info "контейнер не запущен, остановка не требуется"
+    fi
+
+    # 2. Снять битый runtime-state.
+    if ! podman container cleanup "$c" >/dev/null 2>&1; then
+        warn "podman container cleanup вернул ошибку (продолжаю)"
+    fi
+
+    # 3. Поднять заново.
+    if podman start "$c" >/dev/null 2>&1; then
+        ok "podman start — OK"
+    else
+        err "podman start не удался"; failed=$((failed+1)); continue
+    fi
+
+    # 4. Проверка exec.
+    if id_out=$(toolbox run --container "$c" id 2>/dev/null); then
+        ok "exec OK: $id_out"
+        repaired=$((repaired+1))
+    else
+        err "exec не удался — контейнер поднялся, но не отвечает"
+        failed=$((failed+1))
+    fi
+done
+
+echo >&2
+info "Итог: починено=$repaired, ошибок=$failed"
+[[ $failed -eq 0 ]]

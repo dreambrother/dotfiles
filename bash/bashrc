@@ -18,7 +18,7 @@ shopt -s histappend
 export HISTSIZE=10000
 export HISTFILESIZE=20000
 export HISTCONTROL=ignoreboth
-export HISTIGNORE="ls:pwd:exit:clear:opencode:git status:git branch:edit-fzf"
+export HISTIGNORE="ls:pwd:exit:clear:git status:git branch:edit-fzf"
 export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 
 # export PS1="\[\e[0;36m\]\\w \\$ \[\e[0m\]"

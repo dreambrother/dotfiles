@@ -9,27 +9,57 @@ function debounce(key, ms = 3000) {
   return false
 }
 
+function gdbus(args) {
+  return spawn("gdbus", ["call", "--session", ...args], { stdio: ["ignore", "pipe", "ignore"] })
+}
+
+const notified = new Set()
+
 function notify(summary, body, timeout = 5000) {
-  const child = spawn(
-    "notify-send",
-    [
-      "-a", "opencode",
-      "-i", "opencode",
-      "-u", "normal",
-      "-t", String(timeout),
-      "-A", "default=Open",
-      "--wait",
-      summary,
-      body,
-    ],
-    { stdio: ["ignore", "pipe", "ignore"] },
-  )
+  const child = gdbus([
+    "--dest", "org.freedesktop.Notifications",
+    "--object-path", "/org/freedesktop/Notifications",
+    "--method", "org.freedesktop.Notifications.Notify",
+    "opencode",
+    "0",
+    "opencode",
+    summary,
+    body,
+    "['default', 'Open']",
+    "{}",
+    String(timeout),
+  ])
   let out = ""
   child.stdout?.on("data", (d) => { out += d })
   child.on("error", () => {})
   child.on("close", () => {
-    if (out.trim() === "default") activatePtyxis()
+    const m = out.match(/uint32\s+(\d+)/)
+    if (m) notified.add(Number(m[1]))
   })
+}
+
+function monitorActionInvoked() {
+  const child = spawn(
+    "gdbus",
+    ["monitor", "--session", "--dest", "org.gnome.Shell", "--object-path", "/org/freedesktop/Notifications"],
+    { stdio: ["ignore", "pipe", "ignore"] },
+  )
+  let buf = ""
+  child.stdout?.on("data", (d) => {
+    buf += d
+    let idx
+    while ((idx = buf.indexOf("\n")) >= 0) {
+      const line = buf.slice(0, idx).trim()
+      buf = buf.slice(idx + 1)
+      if (!line) continue
+      const m = line.match(/ActionInvoked\s+\(uint32\s+(\d+),\s*'default'\)/)
+      if (m && notified.has(Number(m[1]))) {
+        notified.delete(Number(m[1]))
+        activatePtyxis()
+      }
+    }
+  })
+  child.on("error", () => {})
 }
 
 function activatePtyxis() {
@@ -50,6 +80,7 @@ function activatePtyxis() {
 export default {
   id: "gnome-notify",
   tui: async ({ renderer, event, state }) => {
+    monitorActionInvoked()
     let focused = true
     renderer.on("focus", () => { focused = true })
     renderer.on("blur", () => { focused = false })

@@ -82,17 +82,20 @@ for n in "${chain[@]}"; do
 done
 
 # --- 4. Генерируем правило ---
+root_hub=$(basename "${chain[-1]}")
 gen_rule() {
     cat <<EOF
 # USB wakeup для пробуждения из сна (s2idle) движением мыши.
 # Ресивер мыши часто воткнут в USB-хаб монитора: без wakeup на хабах
 # сигнал от мыши не доходит до root-хаба. Правило:
 #   1) включает wakeup только у самой мыши (листовое устройство);
-#   2) включает wakeup у всех USB-хабов и root-хабов (class 09) —
-#      чтобы сигнал от мыши мог пройти по цепочке. Остальные листовые
-#      устройства остаются выключенными и не будут будить систему.
+#   2) включает wakeup у обычных USB-хабов (class 09), исключая root-хабы;
+#   3) включает wakeup только у того root-хаба ($root_hub), через который
+#      подключена мышь. Остальные листовые устройства и root-хабы
+#      остаются выключенными и не будут будить систему.
 ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="$MOUSE_VENDOR", ATTRS{idProduct}=="$MOUSE_PRODUCT", ATTR{power/wakeup}="enabled"
-ACTION=="add", SUBSYSTEM=="usb", ATTR{bDeviceClass}=="09", ATTR{power/wakeup}="enabled"
+ACTION=="add", SUBSYSTEM=="usb", KERNEL!="usb*", ATTR{bDeviceClass}=="09", ATTR{power/wakeup}="enabled"
+ACTION=="add", SUBSYSTEM=="usb", KERNEL=="$root_hub", ATTR{power/wakeup}="enabled"
 EOF
 }
 rule=$(gen_rule)

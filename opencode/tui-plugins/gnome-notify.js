@@ -1,101 +1,9 @@
 import { spawn } from "node:child_process"
 import { existsSync } from "node:fs"
 
-const last = new Map()
-const notified = new Set()
-let daemon = null
-
-function debounce(key, ms = 3000) {
-  const now = Date.now()
-  if (now - (last.get(key) ?? 0) < ms) return true
-  last.set(key, now)
-  return false
-}
-
-function findGjs() {
-  for (const p of ["/run/host/usr/bin/gjs", "/usr/bin/gjs"]) {
-    if (existsSync(p)) return p
-  }
-  return null
-}
-
-function startDaemon() {
-  const gjs = findGjs()
-  if (!gjs) return
-  const daemonPath = existsSync("/var/home/nvs/dotfiles/opencode/tui-plugins/gnome-notify-daemon.js")
-    ? "/var/home/nvs/dotfiles/opencode/tui-plugins/gnome-notify-daemon.js"
-    : existsSync(import.meta.dirname + "/gnome-notify-daemon.js")
-      ? import.meta.dirname + "/gnome-notify-daemon.js"
-      : null
-  if (!daemonPath) return
-  daemon = spawn(gjs, [daemonPath], {
-    env: {
-      ...process.env,
-      LD_LIBRARY_PATH: "/run/host/usr/lib64:/run/host/usr/lib64/gjs:/usr/lib64:/usr/lib64/gjs",
-      GI_TYPELIB_PATH: "/run/host/usr/lib64/girepository-1.0:/run/host/usr/lib64/gjs/girepository-1.0:/usr/lib64/girepository-1.0:/usr/lib64/gjs/girepository-1.0",
-    },
-    stdio: ["pipe", "pipe", "ignore"],
-  })
-  daemon.stdout?.on("data", (d) => {
-    const m = d.toString().match(/ID\s+(\d+)/)
-    if (m) notified.add(Number(m[1]))
-  })
-  daemon.on("close", () => { daemon = null })
-}
-
-function notify(summary, body, timeout = 5000) {
-  if (!daemon) startDaemon()
-  if (!daemon) return
-  try {
-    daemon.stdin.write(`${summary}|${body}|${timeout}\n`)
-  } catch {
-    daemon = null
-  }
-}
-
-function monitorActionInvoked() {
-  const child = spawn(
-    "gdbus",
-    ["monitor", "--session", "--dest", "org.gnome.Shell", "--object-path", "/org/freedesktop/Notifications"],
-    { stdio: ["ignore", "pipe", "ignore"] },
-  )
-  let buf = ""
-  child.stdout?.on("data", (d) => {
-    buf += d
-    let idx
-    while ((idx = buf.indexOf("\n")) >= 0) {
-      const line = buf.slice(0, idx).trim()
-      buf = buf.slice(idx + 1)
-      if (!line) continue
-      const m = line.match(/ActionInvoked\s+\(uint32\s+(\d+),\s*'default'\)/)
-      if (m && notified.has(Number(m[1]))) {
-        notified.delete(Number(m[1]))
-        activatePtyxis()
-      }
-    }
-  })
-  child.on("error", () => {})
-}
-
-function activatePtyxis() {
-  const child = spawn(
-    "gdbus",
-    [
-      "call", "--session",
-      "--dest", "org.gnome.Ptyxis",
-      "--object-path", "/org/gnome/Ptyxis",
-      "--method", "org.freedesktop.Application.Activate",
-      "{}",
-    ],
-    { stdio: "ignore" },
-  )
-  child.on("error", () => {})
-}
-
 export default {
   id: "gnome-notify",
   tui: async ({ renderer, event, state }) => {
-    monitorActionInvoked()
     let focused = true
     renderer.on("focus", () => { focused = true })
     renderer.on("blur", () => { focused = false })
@@ -135,4 +43,83 @@ export default {
       })
     })
   },
+}
+
+const last = new Map()
+let lastId = 0
+
+function debounce(key, ms = 3000) {
+  const now = Date.now()
+  if (now - (last.get(key) ?? 0) < ms) return true
+  last.set(key, now)
+  return false
+}
+
+function which(bin) {
+  for (const p of [`/run/host/usr/bin/${bin}`, `/usr/bin/${bin}`]) {
+    if (existsSync(p)) return { path: p, host: p.startsWith("/run/host/") }
+  }
+  for (const d of (process.env.PATH ?? "").split(":").filter(Boolean)) {
+    const p = `${d}/${bin}`
+    if (existsSync(p)) return { path: p, host: false }
+  }
+  return null
+}
+
+function hostEnv() {
+  return {
+    ...process.env,
+    LD_LIBRARY_PATH: "/run/host/usr/lib64:/run/host/usr/lib",
+  }
+}
+
+function activatePtyxis() {
+  const gdbus = which("gdbus")
+  if (!gdbus) return
+  const child = spawn(
+    gdbus.path,
+    [
+      "call", "--session",
+      "--dest", "org.gnome.Ptyxis",
+      "--object-path", "/org/gnome/Ptyxis",
+      "--method", "org.freedesktop.Application.Activate",
+      "{}",
+    ],
+    { stdio: "ignore", env: gdbus.host ? hostEnv() : undefined },
+  )
+  child.on("error", () => {})
+}
+
+function notify(summary, body, timeout = 5000) {
+  const ns = which("notify-send")
+  if (!ns) return
+  const args = [
+    "-a", "opencode",
+    "-i", "opencode",
+    "-u", "normal",
+    "-t", String(timeout),
+    "-A", "default=Open",
+    "--wait",
+    "-p",
+  ]
+  if (lastId) args.push("-r", String(lastId))
+  args.push(summary, body)
+
+  const child = spawn(ns.path, args, {
+    stdio: ["ignore", "pipe", "ignore"],
+    env: ns.host ? hostEnv() : undefined,
+  })
+  let buf = ""
+  child.stdout?.on("data", (d) => {
+    buf += d
+    let nl
+    while ((nl = buf.indexOf("\n")) >= 0) {
+      const line = buf.slice(0, nl).trim()
+      buf = buf.slice(nl + 1)
+      if (!line) continue
+      if (/^\d+$/.test(line)) { lastId = Number(line); continue }
+      if (line === "default") { activatePtyxis(); continue }
+    }
+  })
+  child.on("error", () => {})
 }

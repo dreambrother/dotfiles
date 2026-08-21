@@ -1,6 +1,9 @@
 import { spawn } from "node:child_process"
+import { existsSync } from "node:fs"
 
 const last = new Map()
+const notified = new Set()
+let daemon = null
 
 function debounce(key, ms = 3000) {
   const now = Date.now()
@@ -9,33 +12,45 @@ function debounce(key, ms = 3000) {
   return false
 }
 
-function gdbus(args) {
-  return spawn("gdbus", ["call", "--session", ...args], { stdio: ["ignore", "pipe", "ignore"] })
+function findGjs() {
+  for (const p of ["/run/host/usr/bin/gjs", "/usr/bin/gjs"]) {
+    if (existsSync(p)) return p
+  }
+  return null
 }
 
-const notified = new Set()
-
-function notify(summary, body, timeout = 5000) {
-  const child = gdbus([
-    "--dest", "org.freedesktop.Notifications",
-    "--object-path", "/org/freedesktop/Notifications",
-    "--method", "org.freedesktop.Notifications.Notify",
-    "opencode",
-    "0",
-    "opencode",
-    summary,
-    body,
-    "['default', 'Open']",
-    "{}",
-    String(timeout),
-  ])
-  let out = ""
-  child.stdout?.on("data", (d) => { out += d })
-  child.on("error", () => {})
-  child.on("close", () => {
-    const m = out.match(/uint32\s+(\d+)/)
+function startDaemon() {
+  const gjs = findGjs()
+  if (!gjs) return
+  const daemonPath = existsSync("/var/home/nvs/dotfiles/opencode/tui-plugins/gnome-notify-daemon.js")
+    ? "/var/home/nvs/dotfiles/opencode/tui-plugins/gnome-notify-daemon.js"
+    : existsSync(import.meta.dirname + "/gnome-notify-daemon.js")
+      ? import.meta.dirname + "/gnome-notify-daemon.js"
+      : null
+  if (!daemonPath) return
+  daemon = spawn(gjs, [daemonPath], {
+    env: {
+      ...process.env,
+      LD_LIBRARY_PATH: "/run/host/usr/lib64:/run/host/usr/lib64/gjs:/usr/lib64:/usr/lib64/gjs",
+      GI_TYPELIB_PATH: "/run/host/usr/lib64/girepository-1.0:/run/host/usr/lib64/gjs/girepository-1.0:/usr/lib64/girepository-1.0:/usr/lib64/gjs/girepository-1.0",
+    },
+    stdio: ["pipe", "pipe", "ignore"],
+  })
+  daemon.stdout?.on("data", (d) => {
+    const m = d.toString().match(/ID\s+(\d+)/)
     if (m) notified.add(Number(m[1]))
   })
+  daemon.on("close", () => { daemon = null })
+}
+
+function notify(summary, body, timeout = 5000) {
+  if (!daemon) startDaemon()
+  if (!daemon) return
+  try {
+    daemon.stdin.write(`${summary}|${body}|${timeout}\n`)
+  } catch {
+    daemon = null
+  }
 }
 
 function monitorActionInvoked() {

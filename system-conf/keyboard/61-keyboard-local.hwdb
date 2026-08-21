@@ -5,9 +5,14 @@
 #
 # Установка: см. README.md в этой же папке.
 
-# === Провод / 2.4 ГГц донгл (USB, vendor:product = 5566:000a) ===
+# === Провод (USB, vendor:product = 5566:000a) ===
 # Имя ядра: "YJS MicroChip MKEY NOVA Driver"
 evdev:input:b0003v5566p000A*
+ KEYBOARD_KEY_700e4=home
+
+# === 2.4 ГГц донгл (USB, vendor:product = a8a6:3353) ===
+# Имя ядра: "YJX_CHIP WirelessDevice Keyboard"
+evdev:input:b0003vA8A6p3353*
  KEYBOARD_KEY_700e4=home
 
 # === Bluetooth ===

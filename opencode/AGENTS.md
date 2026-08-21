@@ -25,6 +25,10 @@
   provided via podman on the host and exposed inside toolbox through
   `DOCKER_HOST`. The only valid reason to not run a command is an explicit
   failure you cannot resolve.
+- **Do NOT install anything** (packages, tools, binaries, etc.) into existing
+  Fedora toolboxes **without explicit user permission**. If a command needs a
+  missing dependency, ask the user first before installing it. Creating a new
+  toolbox for experiments is allowed, but remember to delete it afterwards.
 
 ## Change Authorization (MANDATORY)
 

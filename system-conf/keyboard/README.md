@@ -2,7 +2,7 @@
 
 Решает задачу переназначения клавиш **только на конкретной внешней клавиатуре**, не затрагивая встроенную клавиатуру ноутбука. Работает на уровне ядра (evdev), поэтому применяется везде: в Wayland/GNOME, в TTY, на экране входа — в отличие от X11-утилит (`xev`, `setxkbmap`), которые не действуют в Wayland-сессии.
 
-Текущее правило: **правый Ctrl → Home** на клавиатуре *YJS MicroChip MKEY NOVA*.
+Текущее правило: **правый Ctrl → Home** на клавиатуре *YJS MicroChip MKEY NOVA*. Применимо ко всем транспортам: провод, 2.4 ГГц донгл, Bluetooth.
 
 ## Куда положить
 
@@ -26,7 +26,7 @@ sudo udevadm trigger /dev/input/event13   # event-узел клавиатуры 
 
 ## Как это работает
 
-1. Ядро при подключении клавиатуры создаёт input-устройство с **modalias** вида `input:b0003v5566p000Ae0110-...`, где закодированы bus/vendor/product.
+1. Ядро при подключении клавиатуры создаёт input-устройство с **modalias** вида `input:b0003vA8A6p3353e0110-...`, где закодированы bus/vendor/product.
 2. udev-правило `60-evdev.rules` передаёт modalias во встроенную hwdb-базу (`IMPORT{builtin}="hwdb --subsystem=input --lookup-prefix=evdev:"`).
 3. При совпадении ключа `evdev:input:b...` udev читает строки `KEYBOARD_KEY_<scancode>=<action>` и через `EVIOCSKEYCODE` ioctl перепрограммирует keycode прямо в ядре.
 4. Результат: нажатие физической клавиши сразу генерирует нужный `KEY_*` код, до любого пользовательского композитора.
@@ -61,7 +61,7 @@ evdev:input:b<bus>v<vend>p<prod>*
 grep -H . /sys/class/input/event*/device/id/{vendor,product,bustype} 2>/dev/null
 # или для конкретного узла (пример — event13):
 cat /sys/class/input/event13/device/modalias
-# → input:b0003v5566p000Ae0110-...     (b=0003 USB, v=5566, p=000A)
+# → input:b0003vA8A6p3353e0110-...     (b=0003 USB, v=A8A6, p=3353)
 ```
 
 ### Как узнать scancode нужной клавиши
@@ -105,8 +105,12 @@ sudo libinput debug-events --device /dev/input/event13
 Эта клавиатура (MKEY NOVA) определяется по-разному в зависимости от транспорта:
 
 ```hwdb
-# USB (провод / 2.4 ГГц донгл) — есть vendor:product (5566:000a)
+# Провод (USB) — vendor:product 5566:000a (имя "YJS MicroChip MKEY NOVA Driver")
 evdev:input:b0003v5566p000A*
+ KEYBOARD_KEY_700e4=home
+
+# 2.4 ГГц донгл (USB) — vendor:product A8A6:3353 (имя "YJX_CHIP WirelessDevice Keyboard")
+evdev:input:b0003vA8A6p3353*
  KEYBOARD_KEY_700e4=home
 
 # Bluetooth — vendor:product нулевые (0000:0000), но modalias-матч по bus

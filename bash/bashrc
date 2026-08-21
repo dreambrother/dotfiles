@@ -20,6 +20,7 @@ export HISTFILESIZE=20000
 export HISTCONTROL=ignoreboth
 export HISTIGNORE="ls:pwd:exit:clear:git status:git branch:edit-fzf"
 export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+export REGISTRY_AUTH_FILE=/var/home/nvs/.config/containers/auth.json
 
 # export PS1="\[\e[0;36m\]\\w \\$ \[\e[0m\]"
 export EDITOR="nano"

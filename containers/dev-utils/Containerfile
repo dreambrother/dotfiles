@@ -6,9 +6,14 @@ RUN dnf install -y libXcomposite libXdamage libXfixes libXrandr libXtst alsa-lib
     && dnf clean all
 
 # chrome devtools
-RUN dnf install -y cups-libs mesa-libgbm libdrm npm && dnf clean all
-RUN mkdir -p /opt/dev && npx -y @puppeteer/browsers install chrome@stable --path /opt/dev
-RUN ln -s /opt/dev/chrome/linux-*/chrome-linux64/chrome /usr/local/bin/chrome \
+RUN dnf install -y cups-libs mesa-libgbm libdrm npm \
+    && dnf clean all \
+    && mkdir -p /opt/dev \
+    && npx -y @puppeteer/browsers install chrome@stable --path /opt/dev \
+    && ln -s /opt/dev/chrome/linux-*/chrome-linux64/chrome /usr/local/bin/chrome \
     && ln -s /opt/dev/chrome/linux-*/chrome-linux64/chrome /usr/bin/google-chrome-stable \
     && mkdir -p /opt/google/chrome \
     && ln -s /opt/dev/chrome/linux-*/chrome-linux64/chrome /opt/google/chrome/chrome
+
+# utils
+RUN dnf install -y kubectl

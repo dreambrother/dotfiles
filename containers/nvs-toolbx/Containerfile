@@ -1,3 +1,3 @@
 FROM registry.fedoraproject.org/fedora-toolbox:44
 
-RUN dnf install -y ripgrep jq
+RUN dnf install -y bat ripgrep jq wl-clipboard

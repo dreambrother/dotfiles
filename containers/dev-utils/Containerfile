@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora-toolbox:44
+FROM localhost/nvs-toolbx:latest
 
 # basic ui layer
 RUN dnf install -y libXcomposite libXdamage libXfixes libXrandr libXtst alsa-lib atk at-spi2-atk at-spi2-core dbus-libs libxkbcommon expat libX11 libXext fontconfig gtk3 cairo pango nspr nss libglvnd-glx mesa-libGL mesa-libEGL libglvnd-opengl \

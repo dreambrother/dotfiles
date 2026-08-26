@@ -83,6 +83,12 @@ function testcontainersClean {
 }
 alias tc-clean=testcontainersClean
 
+function openrouterLimits {
+    apikey=$(cat ~/.config/openrouter.key)
+    HTTPS_PROXY=http://127.0.0.1:10809 curl -H "Authorization: Bearer $apikey" https://openrouter.ai/api/v1/auth/key 2>/dev/null | jq
+}
+alias openrouter-limits=openrouterLimits
+
 command -v fzf >/dev/null 2>&1 && eval "$(fzf --bash)"
 
 # User specific aliases and functions

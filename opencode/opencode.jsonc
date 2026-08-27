@@ -9,14 +9,6 @@
         "setCacheKey": true,
       },
       "models": {
-        "minimax/minimax-m3": {
-          "name": "MiniMax M3",
-          "attachment": true,
-          "modalities": {
-            "input": ["text", "image"],
-            "output": ["text"],
-          },
-        },
         "deepseek/deepseek-v4-pro-0813": { "name": "DeepSeek V4 Pro 0831" },
         "deepseek/deepseek-v4-flash-0731": { "name": "DeepSeek V4 Flash 0731" },
         "xiaomi/mimo-v2.5-pro": { "name": "MiMo V2.5 Pro" },
@@ -28,17 +20,9 @@
             "output": ["text"],
           },
         },
-        "z-ai/glm-5.2": { "name": "GLM-5.2" },
-        "qwen/qwen3.7-plus": {
-          "name": "Qwen 3.7 Plus",
-          "attachment": true,
-          "modalities": {
-            "input": ["text", "image"],
-            "output": ["text"],
-          },
-        },
-        "openai/gpt-5.6-luna-pro": {
-          "name": "GPT-5.6 Luna Pro",
+        "z-ai/glm-5.3": { "name": "GLM-5.3" },
+        "z-ai/glm-5.3-flash": {
+          "name": "GLM 5.3 Flash",
           "attachment": true,
           "modalities": {
             "input": ["text", "image"],
@@ -76,7 +60,7 @@
     "coder": {
       "description": "Handles coding tasks: implementation, fixes, and code changes",
       "mode": "subagent",
-      "model": "routerai/deepseek/deepseek-v4-flash-0731",
+      "model": "openrouter/deepseek/deepseek-v4-flash-0731",
       "prompt": "You are a focused coding agent. Given a task, implement it directly: locate relevant code, make edits, and verify. Follow the codebase conventions and existing patterns.",
     },
     "explore": {

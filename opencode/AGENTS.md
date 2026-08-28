@@ -27,8 +27,23 @@
   failure you cannot resolve.
 - **Do NOT install anything** (packages, tools, binaries, etc.) into existing
   Fedora toolboxes **without explicit user permission**. If a command needs a
-  missing dependency, ask the user first before installing it. Creating a new
-  toolbox for experiments is allowed, but remember to delete it afterwards.
+  missing dependency, ask the user first before installing it. Creating a
+  new toolbox for experiments is allowed, but remember to delete it afterwards.
+- **Heavy commands: full output to a file, context stays clean.** Any
+  command that can potentially produce a large amount of output (tests,
+  builds, lint runs, full logs, etc.) MUST be run with its entire output
+  redirected to a file: `mvn test > /tmp/opencode/test-output.log 2>&1`
+  (create the directory if needed). Two rules:
+  1. **Do not lose output.** The complete log must land in the file;
+     inspect it afterwards with the Grep/Read tools or `grep`/`tail`
+     on the file. Never rely on output truncation — truncated logs hide
+     the interesting lines and force a full re-run that wastes minutes
+     of waiting.
+  2. **Do not flood the context.** Do NOT use `tee` and do NOT let the
+     raw log stream into stdout. How much of it to show is up to you:
+     e.g. a short final summary (`tail -n 50 <file>` to see test
+     failure summaries / exit status), or nothing at all if you go
+     straight to inspecting the file.
 
 ## Change Authorization (MANDATORY)
 

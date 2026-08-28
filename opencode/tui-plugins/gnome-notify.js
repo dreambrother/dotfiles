@@ -24,6 +24,20 @@ export default {
       })
     })
 
+    event.on("question.asked", (e) => {
+      const p = e?.properties ?? {}
+      if (debounce(`q:${p.sessionID}`)) return
+      send(() => {
+        const q = p.questions?.[0]
+        notify(
+          daemon,
+          `OpenCode — вопрос${q?.header ? `: ${q.header}` : ""}`,
+          (q?.question ?? "Агент ждёт ответа").slice(0, 300),
+          15000,
+        )
+      })
+    })
+
     event.on("session.idle", (e) => {
       const p = e?.properties ?? {}
       const s = state.session.get(p.sessionID)

@@ -7,6 +7,7 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "cli_default_open_behavior": "new_window",
   "icon_theme": "Zed (Default)",
   // "ui_font_size": 16,
   // "buffer_font_size": 15,
@@ -137,7 +138,7 @@
     },
     "inline_assistant_model": {
       "provider": "openrouter",
-      "model": "deepseek/deepseek-v4-flash-0731",
+      "model": "z-ai/glm-5.3-flash",
       "enable_thinking": false,
     },
     "sidebar_side": "right",
@@ -145,24 +146,19 @@
     "default_profile": "write",
     "default_model": {
       "provider": "openrouter",
-      "model": "z-ai/glm-5.2",
+      "model": "z-ai/glm-5.3-flash",
       "enable_thinking": true,
     },
     "favorite_models": [],
     "model_parameters": [],
   },
   "language_models": {
-    "opencode": {
-      "show_go_models": false,
-      "show_free_models": false,
-      "show_zen_models": false,
-    },
     "openai_compatible": {
       "RouterAI": {
         "api_url": "https://routerai.ru/api/v1",
         "available_models": [
           {
-            "name": "deepseek/deepseek-v4-pro-0813",
+            "name": "z-ai/glm-5.3",
             "max_tokens": 1000000,
             "max_output_tokens": 320000,
             "max_completion_tokens": 200000,
@@ -175,85 +171,7 @@
             },
           },
           {
-            "name": "deepseek/deepseek-v4-flash-0731",
-            "max_tokens": 1000000,
-            "max_output_tokens": 320000,
-            "max_completion_tokens": 200000,
-            "capabilities": {
-              "tools": true,
-              "images": false,
-              "parallel_tool_calls": false,
-              "prompt_cache_key": false,
-              "chat_completions": true,
-            },
-          },
-          {
-            "name": "minimax/minimax-m3",
-            "max_tokens": 1000000,
-            "max_output_tokens": 320000,
-            "max_completion_tokens": 200000,
-            "capabilities": {
-              "tools": true,
-              "images": true,
-              "parallel_tool_calls": false,
-              "prompt_cache_key": false,
-              "chat_completions": true,
-            },
-          },
-          {
-            "name": "qwen/qwen3.7-plus",
-            "max_tokens": 1000000,
-            "max_output_tokens": 320000,
-            "max_completion_tokens": 200000,
-            "capabilities": {
-              "tools": true,
-              "images": true,
-              "parallel_tool_calls": false,
-              "prompt_cache_key": false,
-              "chat_completions": true,
-            },
-          },
-          {
-            "name": "xiaomi/mimo-v2.5-pro",
-            "max_tokens": 1000000,
-            "max_output_tokens": 320000,
-            "max_completion_tokens": 200000,
-            "capabilities": {
-              "tools": true,
-              "images": false,
-              "parallel_tool_calls": false,
-              "prompt_cache_key": false,
-              "chat_completions": true,
-            },
-          },
-          {
-            "name": "xiaomi/mimo-v2.5",
-            "max_tokens": 1000000,
-            "max_output_tokens": 320000,
-            "max_completion_tokens": 200000,
-            "capabilities": {
-              "tools": true,
-              "images": true,
-              "parallel_tool_calls": false,
-              "prompt_cache_key": false,
-              "chat_completions": true,
-            },
-          },
-          {
-            "name": "z-ai/glm-5.2",
-            "max_tokens": 1000000,
-            "max_output_tokens": 320000,
-            "max_completion_tokens": 200000,
-            "capabilities": {
-              "tools": true,
-              "images": false,
-              "parallel_tool_calls": false,
-              "prompt_cache_key": false,
-              "chat_completions": true,
-            },
-          },
-          {
-            "name": "openai/gpt-5.6-luna-pro",
+            "name": "z-ai/glm-5.3-flash",
             "max_tokens": 1000000,
             "max_output_tokens": 320000,
             "max_completion_tokens": 200000,

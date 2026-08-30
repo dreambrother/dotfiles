@@ -1,19 +1,12 @@
-# Source global definitions
 if [ -f /etc/bashrc ]; then
     . /etc/bashrc
 fi
 
-# User specific environment
 if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
 PATH="$HOME/.opencode/bin:$PATH"
 export PATH
-
-# Uncomment the following line if you don't like systemctl's auto-paging feature:
-# export SYSTEMD_PAGER=
-
-# bash history
 shopt -s histappend
 export HISTSIZE=10000
 export HISTFILESIZE=20000
@@ -21,9 +14,24 @@ export HISTCONTROL=ignoreboth
 export HISTIGNORE="ls:pwd:exit:clear:git status:git branch:edit-fzf"
 export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 export REGISTRY_AUTH_FILE=/var/home/nvs/.config/containers/auth.json
-
-# export PS1="\[\e[0;36m\]\\w \\$ \[\e[0m\]"
 export EDITOR="nano"
+
+command -v fzf >/dev/null 2>&1 && eval "$(fzf --bash)"
+
+if [ -d ~/.bashrc.d ]; then
+    for rc in ~/.bashrc.d/*; do
+        if [ -f "$rc" ]; then
+            . "$rc"
+        fi
+    done
+fi
+unset rc
+
+alias edit="flatpak run org.gnome.TextEditor"
+alias edit-fzf='edit $(fzf)'
+alias nano-fzf='nano $(fzf)'
+alias chrome-testing='toolbox run -c dev-utils chrome'
+alias docx2pdf='toolbox run -c sys-utils -- env SAL_USE_VCLPLUGIN=svp soffice --headless --convert-to pdf --outdir "$(dirname -- "$1")" "$1"'
 
 git-clean() {
   git checkout master; git branch | grep -v master | grep -v release | grep -v develop | grep -v main | xargs git branch -D
@@ -42,12 +50,6 @@ proxy-activate() {
   export HTTPS_PROXY=http://127.0.0.1:10809
   export NO_PROXY=localhost,127.0.0.1
 }
-
-alias edit="flatpak run org.gnome.TextEditor"
-alias edit-fzf='edit $(fzf)'
-alias nano-fzf='nano $(fzf)'
-alias chrome-testing='toolbox run -c dev-utils chrome'
-alias docx2pdf='toolbox run -c sys-utils -- env SAL_USE_VCLPLUGIN=svp soffice --headless --convert-to pdf --outdir "$(dirname -- "$1")" "$1"'
 
 dc-start() {
     podman start $(podman ps -a --filter "label=$1" --filter "status=exited" -q) 2>/dev/null
@@ -85,14 +87,3 @@ opencode() {
     printf '\r\e[K'                                     # erase leftover mouse-tracking output
 }
 
-command -v fzf >/dev/null 2>&1 && eval "$(fzf --bash)"
-
-# User specific aliases and functions
-if [ -d ~/.bashrc.d ]; then
-    for rc in ~/.bashrc.d/*; do
-        if [ -f "$rc" ]; then
-            . "$rc"
-        fi
-    done
-fi
-unset rc

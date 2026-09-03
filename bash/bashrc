@@ -83,7 +83,7 @@ openrouter-limits() {
 opencode() {
     command opencode "$@"
     printf '\e[?1000l\e[?1002l\e[?1003l\e[?1006l'       # disable mouse tracking
-    while read -rs -t 0.01 -N 512 oc_trash; do :; done  # clear input buffer
-    printf '\r\e[K'                                     # erase leftover mouse-tracking output
+    while read -rs -t 0.2 -N 512 oc_trash; do :; done # clear input buffer
+    printf '\r\e[K' # erase leftover mouse-tracking output
 }
 

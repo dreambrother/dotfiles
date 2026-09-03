@@ -18,7 +18,7 @@
     "mode": "subtle",
     "provider": "zed",
   },
-  "diff_view_style": "split",
+  "diff_view_style": "unified",
   "show_edit_predictions": true,
   "ssh_connections": [],
   "restore_on_startup": "launchpad",

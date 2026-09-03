@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+#
+# touchpad-fix — лечение внешнего тачпада (Jomaa, clone Magic Trackpad,
+# USB 05ac:0265) после сна: пере-авторизация USB-порта, из-за зависания
+# которого пропадает перемещение курсора.
+#
+# Известные сценарии отказа (лечатся одинаково):
+#   - после сна: тап работает, перемещение нет (libinput режет битый
+#     поток координат: "Touch jump detected and discarded")
+#   - после переключения на другой VT (ctrl+alt+FN) и обратно:
+#     тачпад молчит полностью, даже тап не работает
+#
+# Причина: прошивка клона не переживает «мягкие» события (resume,
+# loss of evdev grab), нужен полный USB re-enumerate.
+#
+# Устройство ищется динамически по VID/PID 05ac:0265, подключённому
+# к драйверу magicmouse.
+#
+# Использование:
+#   touchpad-fix              найти устройство и выполнить сброс (с подтверждением)
+#   touchpad-fix -y           сброс без подтверждения
+#   touchpad-fix <VID:PID>    искать устройство с другим VID:PID (по умолч. 05ac:0265)
+#   touchpad-fix -h, --help   справка
+#
+set -euo pipefail
+
+readonly PROG="${0##*/}"
+readonly DEFAULT_ID="05ac:0265"
+
+usage() {
+    sed -n '2,12p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+    exit "${1:-0}"
+}
+
+vid_pid="${DEFAULT_ID}"
+assume_yes=false
+for arg in "$@"; do
+    case "$arg" in
+        -h|--help) usage 0 ;;
+        -y) assume_yes=true ;;
+        *) vid_pid="${arg,,}" ;;
+    esac
+done
+
+vid="${vid_pid%%:*}"
+pid="${vid_pid##*:}"
+
+# Ищем HID-устройство на драйвере magicmouse с нужным VID:PID
+found=""
+for d in /sys/bus/hid/drivers/magicmouse/*/; do
+    [[ -d "$d" ]] || continue
+    read -r hid_vid hid_pid < <(awk -F: '/^HID_ID=/{print substr($2,length($2)-3), substr($3,length($3)-3)}' "$d/uevent" 2>/dev/null || true)
+    [[ "${hid_vid,,}" == "$vid" && "${hid_pid,,}" == "$pid" ]] || continue
+    found="$(readlink -f "$d")"
+    break
+done
+[[ -n "$found" ]] || { echo "${PROG}: устройство ${vid_pid} на magicmouse не найдено" >&2; exit 1; }
+
+# Поднимаемся до USB-устройства и получаем порт вида 5-1.1.1
+usb_dev="$(dirname "$found")"
+until [[ -f "$usb_dev/idVendor" ]]; do
+    usb_dev="$(dirname "$usb_dev")"
+    [[ "$usb_dev" == "/" ]] && { echo "${PROG}: USB-предок не найден" >&2; exit 1; }
+done
+port="$(basename "$usb_dev")"
+actual_id="$(<"$usb_dev/idVendor"):$(<"$usb_dev/idProduct")"
+name="$(udevadm info -q property "$usb_dev" 2>/dev/null | awk -F= '/^ID_VENDOR_FROM_DATABASE=/{v=$2} /^ID_MODEL_ENC=/{m=$2} END{print v" "m}')"
+[[ -n "${name// /}" ]] || name='(без названия)'
+
+echo "Найдено: ${port} (${actual_id}) — ${name}"
+if $assume_yes; then
+    answer=y
+else
+    read -r -p "Выполнить сброс порта? [y/N] " answer
+    [[ "$answer" =~ ^[Yy]([Ee][Ss])?$ ]] || { echo "Отменено."; exit 0; }
+fi
+
+echo "Сброс ${port}..."
+echo 0 | sudo tee "$usb_dev/authorized" >/dev/null
+sleep 2
+echo 1 | sudo tee "$usb_dev/authorized" >/dev/null
+
+# Дождаться пересоздания input-устройств
+sleep 1
+echo "Готово. Проверьте перемещение курсора."

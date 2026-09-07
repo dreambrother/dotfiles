@@ -1,0 +1,6 @@
+# Пробуждение по внешней клавиатуре (приёмник в хабе монитора, цепочка
+# usb5 -> 5-1 -> 5-1.1). Разрешаем wakeup только на этих хабах;
+# сами устройства не трогаем — ядро само включило wakeup у приёмника клавиатуры.
+ACTION=="add", SUBSYSTEM=="usb", KERNEL=="usb5", ATTR{power/wakeup}="enabled"
+ACTION=="add", SUBSYSTEM=="usb", KERNEL=="5-1",  ATTR{power/wakeup}="enabled"
+ACTION=="add", SUBSYSTEM=="usb", KERNEL=="5-1.1", ATTR{power/wakeup}="enabled"

@@ -1,0 +1,41 @@
+{
+  "theme": "builtin://dark",
+  "version": 2,
+  "locale": "en",
+  "plugins": {
+    "vi_mode": {
+      "enabled": true,
+      "settings": {
+        "autoStart": false,
+        "arrowKeys": true,
+        "searchWordUnderCursor": true
+      }
+    }
+  },
+  "keybindings": [
+    {
+      "key": "PageUp",
+      "modifiers": ["alt"],
+      "action": "noop",
+      "when": "normal"
+    },
+    {
+      "key": "PageDown",
+      "modifiers": ["alt"],
+      "action": "noop",
+      "when": "normal"
+    },
+    {
+      "key": "PageDown",
+      "modifiers": ["alt"],
+      "action": "next_buffer",
+      "when": "normal"
+    },
+    {
+      "key": "PageUp",
+      "modifiers": ["alt"],
+      "action": "prev_buffer",
+      "when": "normal"
+    }
+  ]
+}

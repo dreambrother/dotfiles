@@ -1,0 +1,22 @@
+// Zed project settings (travel repos) — symlinked as .zed/settings.json
+// Only travel-specific overrides; global jdtls config lives in ~/.config/zed/settings.json
+{
+  "lsp": {
+    "jdtls": {
+      "initialization_options": {
+        "settings": {
+          "java": {
+            "symbols": {
+              "includeSourceMethodDeclarations": true
+            },
+            "configuration": {
+              "maven": {
+                "userSettings": "/var/home/nvs/sources/travel/.m2/settings.xml"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "Go $module dev container",
-  "image": "mcr.microsoft.com/devcontainers/go:1.26",
+  "image": "mcr.microsoft.com/devcontainers/go:1.27",
   "mounts": [
     "source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached",
     "source=${localEnv:SSH_AUTH_SOCK},target=/tmp/ssh-agent.socket,type=bind"

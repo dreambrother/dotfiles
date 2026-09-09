@@ -7,7 +7,7 @@ usage() {
     cat <<'EOF'
 Usage: apply-devcontainer.sh <template> <project> <lang> <target...>
 
-  template - имя json-шаблона из этой папки (например go.json или go-sub.json)
+  template - имя json-шаблона из этой папки (например go.json или go-monorepo.json)
   project  - значение плейсхолдера $project
   lang     - значение плейсхолдера $lang
   target   - целевые папки (поддерживается glob, например ~/sources/hms-*)

@@ -202,6 +202,7 @@
     "Java": {
       "format_on_save": "off",
       "inlay_hints": {
+        "show_other_hints": false,
         "enabled": true,
       },
       "preferred_line_length": 120,
@@ -217,6 +218,21 @@
     "dark": "One Dark",
   },
   "lsp": {
+    "jdtls": {
+      "initialization_options": {
+        "settings": {
+          "java": {
+            "symbols": {
+              "includeSourceMethodDeclarations": true
+            }
+          }
+        }
+      },
+      "settings": {
+        // "java_home": "~/.sdkman/candidates/java/26.0.2-tem",
+        "max_memory": "3G"
+      }
+    },
     "yaml-language-server": {
       "settings": {
         "yaml": {

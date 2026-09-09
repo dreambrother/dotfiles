@@ -1,4 +1,11 @@
 FROM localhost/nvs-toolbx:latest
 
+# Homebrew: dev tools + host /home/linuxbrew passthrough.
+# The symlink is dangling at build time (/run/host exists only at toolbox
+# runtime); it resolves once the container starts. Host dir must exist
+# before `brew install` — see README.md.
 RUN dnf install -y libreoffice-headless libreoffice-langpack-ru libreoffice-writer --exclude=openh264 \
-    && dnf clean all
+    && dnf group install -y development-tools --exclude=openh264 \
+    && dnf clean all \
+    && mkdir -p /var/home \
+    && ln -s /run/host/var/home/linuxbrew /var/home/linuxbrew

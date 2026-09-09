@@ -15,8 +15,12 @@ export HISTIGNORE="ls:pwd:exit:clear:git status:git branch:edit-fzf"
 export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 export REGISTRY_AUTH_FILE=/var/home/nvs/.config/containers/auth.json
 export EDITOR="micro"
+export DOCKER_HOST=unix://${XDG_RUNTIME_DIR}/podman/podman.sock
 
 command -v fzf >/dev/null 2>&1 && eval "$(fzf --bash)"
+if [ -d /home/linuxbrew/.linuxbrew/bin ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
 
 if [ -d ~/.bashrc.d ]; then
     for rc in ~/.bashrc.d/*; do
@@ -84,6 +88,6 @@ openrouter-limits() {
 opencode() {
     command opencode "$@"
     printf '\e[?1000l\e[?1002l\e[?1003l\e[?1006l'       # disable mouse tracking
-    while read -rs -t 0.2 -N 512 oc_trash; do :; done # clear input buffer
+    while read -rs -t 0.5 -N 512 oc_trash; do :; done # clear input buffer
     printf '\r\e[K' # erase leftover mouse-tracking output
 }

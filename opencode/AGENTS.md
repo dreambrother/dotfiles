@@ -7,28 +7,20 @@
 
 ## Environment & Running Commands (MANDATORY)
 
-- **The build/test environment is already configured.** Do NOT investigate
-  the environment (searching for `docker`, `podman`, probing sockets, listing
-  toolboxes, checking `JAVA_HOME`, etc.) before running build/test/lint
-  commands. Just run the requested command directly (`mvn ...`, `npm ...`,
-  `gradle ...`). `DOCKER_HOST` and other required env vars are already set in
-  the current shell; testcontainers works out of the box.
-- The user may forget to enter a toolbox before asking to run a command. If
-  the current shell lacks the tool the command needs (e.g. `mvn`, `npm`,
-  `docker`), do not stop and ask — automatically re-run via
-  `toolbox run -c <appropriate-toolbox> -- <command>`. Match the toolbox to
-  the stack: `java-dev` for Maven/Gradle, `go-dev` for
-  Go, etc. Do NOT manually probe sockets or
-  invoke the host's `/run/host/usr/bin/podman` — it will fail due to missing
-  host libraries.
-- **Do NOT refuse to run tests** claiming Docker is not set up. Docker is
-  provided via podman on the host and exposed inside toolbox through
-  `DOCKER_HOST`. The only valid reason to not run a command is an explicit
-  failure you cannot resolve.
-- **Do NOT install anything** (packages, tools, binaries, etc.) into existing
-  Fedora toolboxes **without explicit user permission**. If a command needs a
-  missing dependency, ask the user first before installing it. Creating a
-  new toolbox for experiments is allowed, but remember to delete it afterwards.
+- **Do NOT investigate the environment** (searching for `docker`, `podman`,
+  probing sockets, checking `JAVA_HOME`, listing toolboxes, etc.) before
+  running build/test/lint commands. Just run the requested command directly
+  (`mvn ...`, `npm ...`, `go ...`). Build tools (JDK, Maven, Go, Python, …)
+  are installed on the host and available on `PATH`/`JAVA_HOME`.
+- **Docker for tests:** there is no Docker on the host, but `DOCKER_HOST`
+  points to the user podman socket
+  (`unix://$XDG_RUNTIME_DIR/podman/podman.sock`, already exported in
+  `~/.bashrc`). Testcontainers works out of the box — run tests directly, do
+  not probe for Docker or create toolboxes for it.
+- **Toolboxes:** when a check genuinely requires isolation or a container
+  runtime missing on the host, creating a toolbox is allowed — but delete it
+  after the work is done. Do NOT install anything into existing Fedora
+  toolboxes without explicit user permission.
 - **Heavy commands: full output to a file, context stays clean.** Any
   command that can potentially produce a large amount of output (tests,
   builds, lint runs, full logs, etc.) MUST be run with its entire output
@@ -41,7 +33,7 @@
      of waiting.
   2. **Do not flood the context.** Do NOT use `tee` and do NOT let the
      raw log stream into stdout. How much of it to show is up to you:
-     e.g. a short final summary (`tail -n 50 <file>` to see test
+     e.g. a final summary (`tail -n 50 <file>` to see test
      failure summaries / exit status), or nothing at all if you go
      straight to inspecting the file.
 

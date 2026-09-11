@@ -9,9 +9,16 @@
         "setCacheKey": true,
       },
       "models": {
-        "z-ai/glm-5.3": { "name": "GLM-5.3" },
         "z-ai/glm-5.3-flash": {
           "name": "GLM 5.3 Flash",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"],
+          },
+        },
+        "deepseek/deepseek-v4.1-flash": {
+          "name": "DeepSeek V4.1 Flash",
           "attachment": true,
           "modalities": {
             "input": ["text", "image"],
@@ -35,7 +42,7 @@
       "enabled": true,
     },
   },
-  "small_model": "openrouter/z-ai/glm-5.3-flash",
+  "small_model": "openrouter/deepseek/deepseek-v4.1-flash",
   "agent": {
     "code-reviewer": {
       "description": "Reviews code for best practices and potential issues",
@@ -49,11 +56,11 @@
     "coder": {
       "description": "Handles coding tasks: implementation, fixes, and code changes",
       "mode": "subagent",
-      "model": "openrouter/z-ai/glm-5.3-flash",
+      "model": "openrouter/deepseek/deepseek-v4.1-flash",
       "prompt": "You are a focused coding agent. Given a task, implement it directly: locate relevant code, make edits, and verify. Follow the codebase conventions and existing patterns.",
     },
     "explore": {
-      "model": "openrouter/z-ai/glm-5.3-flash",
+      "model": "openrouter/deepseek/deepseek-v4.1-flash",
     },
   },
 }

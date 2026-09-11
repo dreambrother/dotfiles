@@ -3,5 +3,14 @@ set mouse
 set autoindent
 set tabstospaces
 set tabsize 4
+
+bind Sh-M-C "{execute}| wl-copy >/dev/null 2>&1 {enter}{undo}" main
+bind Sh-M-F formatter main
+
+extendsyntax go formatter gofmt -w
+extendsyntax sh formatter shfmt -i 4 -w
+extendsyntax json formatter prettier --write
+extendsyntax yaml formatter prettier --write
+
 include ~/.nano.d/Containerfile.nanorc
 include ~/.nano.d/jsonc.nanorc

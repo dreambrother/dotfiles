@@ -229,7 +229,6 @@
         }
       },
       "settings": {
-        // "java_home": "~/.sdkman/candidates/java/26.0.2-tem",
         "max_memory": "3G"
       }
     },

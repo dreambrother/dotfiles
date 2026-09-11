@@ -7,6 +7,7 @@
 syntax jsonc "\.jsonc$"
 # In JSONC both // and /* */ comments are permitted.
 comment "//"
+formatter prettier --parser jsonc --write
 
 # Numbers (used as value).
 color green ":[[:blank:]]*\-?(0|[1-9][0-9]*)(\.[0-9]+)?([Ee]?[-+]?[0-9]+)?"

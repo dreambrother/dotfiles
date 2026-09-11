@@ -1,6 +1,0 @@
-{
-    "colorscheme": "atom-dark",
-    "scrollspeed": 1,
-    "lsp.autocompleteDetails": true,
-    "autofmt.onsave": false
-}

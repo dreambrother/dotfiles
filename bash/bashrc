@@ -18,7 +18,7 @@ export EDITOR="nano"
 export DOCKER_HOST=unix://${XDG_RUNTIME_DIR}/podman/podman.sock
 
 if [ -d /home/linuxbrew/.linuxbrew/bin ]; then
-   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 command -v fzf >/dev/null 2>&1 && eval "$(fzf --bash)"
 command -v mise >/dev/null 2>&1 && eval "$(mise activate bash)"
@@ -39,21 +39,22 @@ alias chrome-testing='toolbox run -c dev-utils chrome'
 alias docx2pdf='toolbox run -c sys-utils -- env SAL_USE_VCLPLUGIN=svp soffice --headless --convert-to pdf --outdir "$(dirname -- "$1")" "$1"'
 
 git-clean() {
-  git checkout master; git branch | grep -v master | grep -v release | grep -v develop | grep -v main | xargs git branch -D
+    git checkout master
+    git branch | grep -v master | grep -v release | grep -v develop | grep -v main | xargs git branch -D
 }
 
 git-commit() {
-  task=$(git branch --show-current | grep -Eo "DEV-[0-9]+") && git commit -m "$task $1"
+    task=$(git branch --show-current | grep -Eo "DEV-[0-9]+") && git commit -m "$task $1"
 }
 
 git-add-and-commit() {
-  task=$(git branch --show-current | grep -Eo "DEV-[0-9]+") && git add . && git commit -m "$task $1"
+    task=$(git branch --show-current | grep -Eo "DEV-[0-9]+") && git add . && git commit -m "$task $1"
 }
 
 proxy-activate() {
-  export HTTP_PROXY=http://127.0.0.1:10809
-  export HTTPS_PROXY=http://127.0.0.1:10809
-  export NO_PROXY=localhost,127.0.0.1
+    export HTTP_PROXY=http://127.0.0.1:10809
+    export HTTPS_PROXY=http://127.0.0.1:10809
+    export NO_PROXY=localhost,127.0.0.1
 }
 
 dc-start() {
@@ -87,7 +88,7 @@ openrouter-limits() {
 
 opencode() {
     command opencode "$@"
-    printf '\e[?1000l\e[?1002l\e[?1003l\e[?1006l'       # disable mouse tracking
+    printf '\e[?1000l\e[?1002l\e[?1003l\e[?1006l'     # disable mouse tracking
     while read -rs -t 0.5 -N 512 oc_trash; do :; done # clear input buffer
-    printf '\r\e[K' # erase leftover mouse-tracking output
+    printf '\r\e[K'                                   # erase leftover mouse-tracking output
 }

@@ -88,7 +88,9 @@ openrouter-limits() {
 
 opencode() {
     command opencode "$@"
-    printf '\e[?1000l\e[?1002l\e[?1003l\e[?1006l'     # disable mouse tracking
-    while read -rs -t 0.5 -N 512 oc_trash; do :; done # clear input buffer
-    printf '\r\e[K'                                   # erase leftover mouse-tracking output
+    stty -echo 2>/dev/null                                                            # don't echo pending input
+    printf '\e[?1000l\e[?1002l\e[?1003l\e[?1004l\e[?1005l\e[?1006l\e[?1015l\e[?2004l' # disable mouse/focus/paste modes
+    while read -rs -t 0.05 -N 512 oc_trash; do :; done                                # clear input buffer
+    stty sane 2>/dev/null                                                             # restore terminal settings
+    tput reset 2>/dev/null                                                            # full terminal reset
 }

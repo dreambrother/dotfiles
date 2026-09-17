@@ -36,6 +36,9 @@
   "agent": {
     "tool_permissions": {
       "tools": {
+        "fetch": {
+          "default": "allow"
+        },
         "terminal": {
           "always_allow": [
             {
@@ -144,8 +147,9 @@
     "dock": "right",
     "default_profile": "write",
     "default_model": {
+      "effort": "high",
       "provider": "openrouter",
-      "model": "z-ai/glm-5.3-flash",
+      "model": "deepseek/deepseek-v4.1-flash",
       "enable_thinking": true,
     },
     "favorite_models": [],

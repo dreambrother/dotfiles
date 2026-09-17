@@ -1,0 +1,18 @@
+[tools]
+bat = "latest"
+fzf = "latest"
+go = "latest"
+java = "temurin-21.0.12+101.0.LTS"
+maven = "latest"
+node = "20.14"
+"npm:prettier" = "latest"
+ripgrep = "latest"
+rust = "1.98.1"
+shfmt = "latest"
+
+[env]
+GOPATH = "{{env.HOME}}/.local/go"
+_.path = ["{{env.HOME}}/.local/go/bin"]
+
+[settings]
+go.set_gobin = false

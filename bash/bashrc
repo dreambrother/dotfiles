@@ -17,12 +17,6 @@ export REGISTRY_AUTH_FILE=/var/home/nvs/.config/containers/auth.json
 export EDITOR="nano"
 export DOCKER_HOST=unix://${XDG_RUNTIME_DIR}/podman/podman.sock
 
-if [ -d /home/linuxbrew/.linuxbrew/bin ]; then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-fi
-command -v fzf >/dev/null 2>&1 && eval "$(fzf --bash)"
-command -v mise >/dev/null 2>&1 && eval "$(mise activate bash)"
-
 if [ -d ~/.bashrc.d ]; then
     for rc in ~/.bashrc.d/*; do
         if [ -f "$rc" ]; then
@@ -31,6 +25,9 @@ if [ -d ~/.bashrc.d ]; then
     done
 fi
 unset rc
+
+command -v mise >/dev/null 2>&1 && eval "$(mise activate bash)"
+command -v fzf >/dev/null 2>&1 && eval "$(fzf --bash)"
 
 alias edit="flatpak run org.gnome.TextEditor"
 alias edit-fzf='edit $(fzf)'
@@ -94,4 +91,8 @@ opencode() {
     sleep 0.05                                                                        # let terminal apply the reset
     while read -rs -t 0.02 -N 512 oc_trash; do :; done                                # drop late mouse reports
     stty sane 2>/dev/null                                                             # restore terminal settings
+}
+
+jdk-find() {
+    find ~/.local/share/mise/installs/java/ -maxdepth 1 -mindepth 1 -type d -name "*$1*"
 }

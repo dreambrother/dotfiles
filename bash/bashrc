@@ -39,50 +39,39 @@ git-clean() {
     git checkout master
     git branch | grep -v master | grep -v release | grep -v develop | grep -v main | xargs git branch -D
 }
-
 git-commit() {
     task=$(git branch --show-current | grep -Eo "DEV-[0-9]+") && git commit -m "$task $1"
 }
-
 git-add-and-commit() {
     task=$(git branch --show-current | grep -Eo "DEV-[0-9]+") && git add . && git commit -m "$task $1"
 }
-
 proxy-activate() {
     export HTTP_PROXY=http://127.0.0.1:10809
     export HTTPS_PROXY=http://127.0.0.1:10809
     export NO_PROXY=localhost,127.0.0.1
 }
-
 dc-start() {
     podman start $(podman ps -a --filter "label=$1" --filter "status=exited" -q) 2>/dev/null
 }
-
 dc-stop() {
     podman stop $(podman ps -a --filter "label=$1" --filter "status=running" -q) 2>/dev/null
 }
-
 dc-stop-all() {
     podman stop $(podman ps -a --filter "label=devcontainer.local_folder" --filter "status=running" -q) 2>/dev/null
 }
-
 dc-clean-all() {
     podman rm -f $(podman ps -a --filter "label=devcontainer.local_folder" --filter "status=exited" -q) 2>/dev/null
 }
-
 dc-clean() {
     podman rm -f $(podman ps -a --filter "label=$1" --filter "status=exited" -q) 2>/dev/null
 }
-
 tc-clean() {
     podman rm -f $(podman ps -a --filter "label=org.testcontainers" -q) 2>/dev/null
 }
-
 openrouter-limits() {
     apikey=$(cat ~/.config/openrouter.key)
     HTTPS_PROXY=http://127.0.0.1:10809 curl -H "Authorization: Bearer $apikey" https://openrouter.ai/api/v1/auth/key 2>/dev/null | jq
 }
-
 opencode() {
     command opencode "$@"
     stty -echo -icanon min 0 time 0 2>/dev/null                                       # swallow leftovers without echo
@@ -92,7 +81,6 @@ opencode() {
     while read -rs -t 0.02 -N 512 oc_trash; do :; done                                # drop late mouse reports
     stty sane 2>/dev/null                                                             # restore terminal settings
 }
-
 jdk-find() {
     find ~/.local/share/mise/installs/java/ -maxdepth 1 -mindepth 1 -type d -name "*$1*"
 }

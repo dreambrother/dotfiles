@@ -3,6 +3,7 @@ set mouse
 set autoindent
 set tabstospaces
 set tabsize 4
+set afterends
 
 bind Sh-M-C "{execute}| wl-copy >/dev/null 2>&1 {enter}{undo}" main
 bind Sh-M-F formatter main

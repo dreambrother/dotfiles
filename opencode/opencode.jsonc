@@ -9,16 +9,16 @@
         "setCacheKey": true,
       },
       "models": {
-        "z-ai/glm-5.3-flash": {
-          "name": "GLM 5.3 Flash",
+        "deepseek/deepseek-v4.1-flash": {
+          "name": "DeepSeek V4.1 Flash",
           "attachment": true,
           "modalities": {
             "input": ["text", "image"],
             "output": ["text"],
           },
         },
-        "deepseek/deepseek-v4.1-flash": {
-          "name": "DeepSeek V4.1 Flash",
+        "xiaomi/mimo-v2.6-pro": {
+          "name": "MiMo V2.6 Pro",
           "attachment": true,
           "modalities": {
             "input": ["text", "image"],
@@ -36,8 +36,13 @@
     "chrome-devtools": {
       "type": "local",
       "command": [
-        "toolbox", "run", "-c", "dev-utils",
-        "/bin/sh", "-c", "npx -y chrome-devtools-mcp@latest --no-usage-statistics"
+        "toolbox",
+        "run",
+        "-c",
+        "dev-utils",
+        "/bin/sh",
+        "-c",
+        "npx -y chrome-devtools-mcp@latest --no-usage-statistics",
       ],
       "enabled": true,
     },

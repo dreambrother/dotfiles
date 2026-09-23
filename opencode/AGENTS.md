@@ -37,6 +37,15 @@
      failure summaries / exit status), or nothing at all if you go
      straight to inspecting the file.
 
+## Task Execution: Subagents vs Current Session (MANDATORY)
+
+- **Large task** (there was preliminary research and the scope of changes
+  looks large): ALWAYS delegate code writing and tests execution to subagents.
+  When presenting a plan, explicitly describe how the work will be split
+  between subagents (each one does, boundaries, order).
+- **Small fix** (roughly ~10 lines or fewer, e.g. a typo, config tweak,
+  small patch): do it in the current session, no subagents.
+
 ## Change Authorization (MANDATORY)
 
 - **Do NOT make any code change** (edit, write, delete, rename, or run

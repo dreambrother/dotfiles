@@ -1,5 +1,0 @@
-FROM localhost/nvs-toolbx:latest
-
-RUN dnf install -y libreoffice-headless libreoffice-langpack-ru libreoffice-writer --exclude=openh264 \
-    && dnf group install -y development-tools --exclude=openh264 \
-    && dnf clean all

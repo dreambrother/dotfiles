@@ -33,7 +33,6 @@ alias edit="flatpak run org.gnome.TextEditor"
 alias edit-fzf='edit $(fzf)'
 alias nano-fzf='nano $(fzf)'
 alias chrome-testing='toolbox run -c dev-utils chrome'
-alias docx2pdf='toolbox run -c sys-utils -- env SAL_USE_VCLPLUGIN=svp soffice --headless --convert-to pdf --outdir "$(dirname -- "$1")" "$1"'
 
 git-clean() {
     git checkout master
@@ -83,4 +82,7 @@ opencode() {
 }
 jdk-find() {
     find ~/.local/share/mise/installs/java/ -maxdepth 1 -mindepth 1 -type d -name "*$1*"
+}
+no-sleep() {
+    systemd-inhibit --what=sleep sleep $1
 }

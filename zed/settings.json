@@ -161,20 +161,20 @@
         "api_url": "https://routerai.ru/api/v1",
         "available_models": [
           {
-            "name": "z-ai/glm-5.3",
+            "name": "deepseek/deepseek-4.1-flash",
             "max_tokens": 1000000,
             "max_output_tokens": 320000,
             "max_completion_tokens": 200000,
             "capabilities": {
               "tools": true,
-              "images": false,
+              "images": true,
               "parallel_tool_calls": false,
               "prompt_cache_key": false,
               "chat_completions": true,
             },
           },
           {
-            "name": "z-ai/glm-5.3-flash",
+            "name": "xiaomi/mimo-v2.6-pro",
             "max_tokens": 1000000,
             "max_output_tokens": 320000,
             "max_completion_tokens": 200000,

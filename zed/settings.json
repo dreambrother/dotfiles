@@ -145,12 +145,10 @@
     },
     "sidebar_side": "right",
     "dock": "right",
-    "default_profile": "write",
+    "default_profile": "ask",
     "default_model": {
-      "effort": "high",
-      "provider": "openrouter",
+      "provider": "RouterAI",
       "model": "deepseek/deepseek-v4.1-flash",
-      "enable_thinking": true,
     },
     "favorite_models": [],
     "model_parameters": [],
@@ -161,7 +159,7 @@
         "api_url": "https://routerai.ru/api/v1",
         "available_models": [
           {
-            "name": "deepseek/deepseek-4.1-flash",
+            "name": "deepseek/deepseek-v4.1-flash",
             "max_tokens": 1000000,
             "max_output_tokens": 320000,
             "max_completion_tokens": 200000,
@@ -191,6 +189,7 @@
     },
   },
   "git_panel": {
+    "group_by": "none",
     "dock": "left",
     "tree_view": false,
   },

@@ -16,4 +16,5 @@ RUN dnf install -y cups-libs mesa-libgbm libdrm npm \
     && ln -s /opt/dev/chrome/linux-*/chrome-linux64/chrome /opt/google/chrome/chrome
 
 # utils
-RUN dnf install -y kubectl
+RUN dnf install -y kubectl \
+    && dnf clean all

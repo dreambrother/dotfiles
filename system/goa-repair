@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+#
+# goa-repair — перезапуск GOA и evolution-сервисов после падения
+# gnome-keyring-daemon (баг upstream: OpenSession -> abort, тикет #190).
+# https://gitlab.gnome.org/GNOME/gnome-keyring/-/work_items/190
+#
+# Симптомы: всплывает запрос пароля от keyring, Gnome Calendar и другие
+# клиенты вылетают из Google-аккаунта и не логинятся до перезагрузки.
+# Причина: при падении демона login-keyring блокируется, goa-daemon не может
+# прочитать OAuth-токен и ставит аккаунту AttentionNeeded, а в пределах сессии
+# к перезапущенному демону сам не переподключается. Перезапуск сервисов
+# заставляет goa-daemon заново прочитать токен из keyring.
+#
+# Использование:
+#   goa-repair              перезапустить сервисы и напечатать ОК / НЕ ОК
+#   goa-repair -h, --help   справка
+#
+# Ожидание перед проверкой (сек) переопределяется GOA_REPAIR_WAIT (по умолч. 5).
+#
+set -euo pipefail
+
+readonly PROG="${0##*/}"
+readonly WAIT="${GOA_REPAIR_WAIT:-5}"
+readonly GOA_DEST="org.gnome.OnlineAccounts"
+readonly ACCOUNT_IFACE="org.gnome.OnlineAccounts.Account"
+readonly UNITS=(
+    "dbus-:1.2-org.gnome.OnlineAccounts@0.service"
+    evolution-source-registry.service
+    evolution-calendar-factory.service
+    evolution-addressbook-factory.service
+    evolution-alarm-notify.service
+    gvfs-goa-volume-monitor.service
+    "dbus-:1.2-org.gnome.Shell.CalendarServer@0.service"
+)
+
+usage() { sed -n '3,15p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit "${1:-0}"; }
+
+case "${1-}" in
+    -h|--help) usage 0 ;;
+    "") ;;
+    *) usage 1 ;;
+esac
+
+account_paths() {
+    busctl --user tree "$GOA_DEST" --no-pager 2>/dev/null \
+        | grep -oE '/org/gnome/OnlineAccounts/Accounts/account_[A-Za-z0-9_]+' \
+        | sort -u
+}
+
+prop() {
+    busctl --user get-property "$GOA_DEST" "$1" "$ACCOUNT_IFACE" "$2" 2>/dev/null \
+        | sed 's/^[a-z] //; s/^"//; s/"$//' || true
+}
+
+echo "${PROG}: перезапуск сервисов..."
+for unit in "${UNITS[@]}"; do
+    if systemctl --user restart "$unit" 2>/dev/null; then
+        echo "  ok: $unit"
+    else
+        echo "  пропущено (нет юнита): $unit" >&2
+    fi
+done
+
+echo "${PROG}: ждём ${WAIT} с, пока goa-daemon подтянет токен из keyring..."
+sleep "$WAIT"
+
+mapfile -t accounts < <(account_paths)
+if ((${#accounts[@]} == 0)); then
+    echo "${PROG}: НЕ ОК — аккаунты GOA не найдены (goa-daemon не поднялся?)"
+    exit 1
+fi
+
+ok=true
+for path in "${accounts[@]}"; do
+    attention="$(prop "$path" AttentionNeeded)"
+    identity="$(prop "$path" Identity)"
+    echo "  ${identity:-$path}: AttentionNeeded=${attention:-?}"
+    [[ "$attention" == "true" ]] && ok=false
+done
+
+if $ok; then
+    echo "${PROG}: ОК — все аккаунты на месте"
+else
+    echo "${PROG}: НЕ ОК — аккаунт требует внимания (keyring залочен? нужен выход/вход в сессию)"
+    exit 1
+fi

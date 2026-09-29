@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+#
+# focusrite-fix — оживление Focusrite Scarlett Solo 2nd Gen (USB 1235:8205),
+# которая после сна гаснет и пропадает с USB-шины. Обычно лечится перетыком.
+#
+# Вместо перетыка скрипт рвёт питание (VBUS) USB-порта, на котором сидит карта,
+# через sysfs-файл <хаб>-port<N>/disable (ядро >= 6.0, usb_hub_set_port_power).
+# Мониторный хаб Realtek RTS5411 (0bda:5411) умеет честный per-port power
+# switching: запись "1" снимает VBUS, "0" — возвращает.
+#
+# Работает без root, если установлен udev-рул из system-conf/focusrite-power/
+# (даёт пользователю право писать в <хаб>-port<N>/disable).
+#
+# Использование:
+#   focusrite-fix              найти карту, показать план и выполнить cycle
+#   focusrite-fix -y           cycle без подтверждения
+#   focusrite-fix -n           dry-run: только показать, что будет сделано
+#   focusrite-fix -l HUB -p N  явно задать хаб и порт (по умолч. авто)
+#   focusrite-fix -d SEC       пауза между снятием/подачей питания (по умолч. 3)
+#   focusrite-fix -h, --help   справка
+#
+set -euo pipefail
+
+readonly PROG="${0##*/}"
+readonly VIDPID="1235:8205"
+readonly DEFAULT_HUB="5-1"
+readonly DEFAULT_PORT="2"
+
+usage() { sed -n '3,21p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit "${1:-0}"; }
+
+assume_yes=false
+dry_run=false
+delay=3
+hub=""
+port=""
+
+while (($#)); do
+    case "$1" in
+        -h|--help) usage 0 ;;
+        -y) assume_yes=true ;;
+        -n|--dry-run) dry_run=true ;;
+        -d) delay="${2:?-d требует аргумента}"; shift ;;
+        -l) hub="${2:?-l требует аргумента}"; shift ;;
+        -p) port="${2:?-p требует аргумента}"; shift ;;
+        *) echo "${PROG}: неизвестный аргумент: $1" >&2; usage 1 ;;
+    esac
+    shift
+done
+
+found=""
+for d in /sys/bus/usb/devices/*/; do
+    [[ -f "$d/idVendor" && -f "$d/idProduct" ]] || continue
+    [[ "$(<"$d/idVendor"):$(<"$d/idProduct")" == "$VIDPID" ]] || continue
+    found="$(basename "$d")"
+    break
+done
+
+if [[ -z "$hub" || -z "$port" ]]; then
+    if [[ -n "$found" ]]; then
+        hub="${found%.*}"
+        port="${found##*.}"
+        echo "${PROG}: карта найдена на ${found} (хаб ${hub}, порт ${port})"
+    else
+        hub="$DEFAULT_HUB"
+        port="$DEFAULT_PORT"
+        echo "${PROG}: карта не найдена, использую по умолчанию хаб ${hub}, порт ${port}"
+    fi
+else
+    echo "${PROG}: заданы хаб ${hub}, порт ${port}"
+fi
+
+if [[ "$hub" == *-* ]]; then
+    disable="/sys/bus/usb/devices/${hub}:1.0/${hub}-port${port}/disable"
+else
+    disable="/sys/bus/usb/devices/${hub}-0:1.0/usb${hub}-port${port}/disable"
+fi
+
+if $dry_run; then
+    echo "${PROG}: sysfs: ${disable}"
+    echo "${PROG}: dry-run: echo 1 > ${disable}; sleep ${delay}; echo 0 > ${disable}"
+    [[ -w "$disable" ]] || echo "${PROG}: внимание: ${disable} сейчас не доступен на запись (нет udev-рула?)" >&2
+    exit 0
+fi
+
+[[ -w "$disable" ]] || {
+    echo "${PROG}: ${disable} не доступен на запись." >&2
+    echo "${PROG}: поставь udev-рул (system-conf/focusrite-power/) и перезапусти udev," >&2
+    echo "${PROG}: либо запусти скрипт через sudo." >&2
+    exit 1
+}
+
+if $assume_yes; then
+    answer=y
+else
+    read -r -p "Выполнить cycle питания (порт ${port} хаба ${hub})? [y/N] " answer
+    [[ "$answer" =~ ^[Yy]([Ee][Ss])?$ ]] || { echo "Отменено."; exit 0; }
+fi
+
+echo "${PROG}: рву питание ${hub}:${port} через sysfs..."
+echo 1 > "$disable"
+sleep "$delay"
+echo 0 > "$disable"
+
+sleep 2
+if lsusb -d "$VIDPID" >/dev/null 2>&1; then
+    echo "${PROG}: OK — карта на шине"
+else
+    echo "${PROG}: НЕ ОК — карта не появилась (проверь кабель/порт)"
+    exit 1
+fi

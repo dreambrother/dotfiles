@@ -34,6 +34,9 @@
     "dock": "left",
   },
   "agent": {
+    "threads_sidebar": {
+      "position": "right"
+    },
     "tool_permissions": {
       "tools": {
         "fetch": {
@@ -78,19 +81,10 @@
               "pattern": "^cat\\b",
             },
             {
-              "pattern": "^sed\\b",
-            },
-            {
-              "pattern": "^cd\\s+/Users/nshmakov/Sources/ticket/gateway-service(\\s|$)",
-            },
-            {
               "pattern": "^mvn\\s+test-compile(\\s|$)",
             },
             {
               "pattern": "^mvn\\s+clean(\\s|$)",
-            },
-            {
-              "pattern": "^GIT_EDITOR=true\\s+git\\s+commit(\\s|$)",
             },
             {
               "pattern": "^cd\\s+/tmp(\\s|$)",
@@ -102,9 +96,6 @@
               "pattern": "^jar\\s+xf(\\s|$)",
             },
             {
-              "pattern": "^diff\\s+/Users/nshmakov/Sources/ticket/gateway-service/src/test/resources/containers_new/order/create/ms_add_user\\.sql(\\s|$)",
-            },
-            {
               "pattern": "^wc\\b",
             },
             {
@@ -114,25 +105,16 @@
               "pattern": "^sort\\b",
             },
             {
-              "pattern": "^find\\s+\\~/\\.m2/repository/org/springframework/spring-test(\\s|$)",
-            },
-            {
               "pattern": "^unzip\\b",
             },
             {
               "pattern": "^echo\\b",
             },
             {
-              "pattern": "^ls\\s+cli/\\.venv/bin/(\\s|$)",
-            },
-            {
               "pattern": "^go\\s+run(\\s|$)",
             },
             {
               "pattern": "^go\\s+build(\\s|$)",
-            },
-            {
-              "pattern": "^python\\b",
             },
           ],
         },
@@ -143,7 +125,6 @@
       "model": "z-ai/glm-5.3-flash",
       "enable_thinking": false,
     },
-    "sidebar_side": "right",
     "dock": "right",
     "default_profile": "ask",
     "default_model": {

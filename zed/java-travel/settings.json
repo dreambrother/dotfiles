@@ -6,9 +6,6 @@
       "initialization_options": {
         "settings": {
           "java": {
-            "symbols": {
-              "includeSourceMethodDeclarations": true
-            },
             "configuration": {
               "maven": {
                 "userSettings": "/var/home/nvs/sources/travel/.m2/settings.xml"

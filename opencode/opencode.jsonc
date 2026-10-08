@@ -47,11 +47,12 @@
       "enabled": true,
     },
   },
-  "small_model": "openrouter/deepseek/deepseek-v4.1-flash",
+  "small_model": "openrouter/xiaomi/mimo-v2.6-flash",
   "agent": {
     "code-reviewer": {
       "description": "Reviews code for best practices and potential issues",
       "mode": "subagent",
+      "model": "openrouter/z-ai/glm-5.3",
       "prompt": "You are a code reviewer. Focus on security, performance, and maintainability.",
       "tools": {
         "write": false,
@@ -65,7 +66,7 @@
       "prompt": "You are a focused coding agent. Given a task, implement it directly: locate relevant code, make edits, and verify. Follow the codebase conventions and existing patterns.",
     },
     "explore": {
-      "model": "openrouter/deepseek/deepseek-v4.1-flash",
+      "model": "openrouter/xiaomi/mimo-v2.6-flash",
     },
   },
 }

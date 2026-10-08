@@ -34,6 +34,17 @@
     "dock": "left",
   },
   "agent": {
+    "sandbox_permissions": {
+      "network_hosts": [
+        "zed.dev",
+        "api.github.com",
+        "registry.npmjs.org",
+        "pypi.org",
+        "crates.io",
+        "hub.docker.com",
+        "pkg.go.dev"
+      ]
+    },
     "threads_sidebar": {
       "position": "right"
     },
@@ -43,6 +54,7 @@
           "default": "allow"
         },
         "terminal": {
+          "default": "allow",
           "always_allow": [
             {
               "pattern": "^poetry\\s+run(\\s|$)",
@@ -126,7 +138,7 @@
       "enable_thinking": false,
     },
     "dock": "right",
-    "default_profile": "ask",
+    "default_profile": "write",
     "default_model": {
       "provider": "RouterAI",
       "model": "deepseek/deepseek-v4.1-flash",

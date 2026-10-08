@@ -9,11 +9,13 @@
 # Имя ядра: "YJS MicroChip MKEY NOVA Driver"
 evdev:input:b0003v5566p000A*
  KEYBOARD_KEY_700e4=home
+ KEYBOARD_KEY_c0192=sysrq   # Fn+F12 (KEY_CALC) → PrintScreen
 
 # === 2.4 ГГц донгл (USB, vendor:product = a8a6:3353) ===
 # Имя ядра: "YJX_CHIP WirelessDevice Keyboard"
 evdev:input:b0003vA8A6p3353*
  KEYBOARD_KEY_700e4=home
+ KEYBOARD_KEY_c0192=sysrq   # Fn+F12 (KEY_CALC) → PrintScreen
 
 # === Bluetooth ===
 # BT-HID не передаёт meaningful vendor/product (0000:0000).
@@ -21,8 +23,10 @@ evdev:input:b0003vA8A6p3353*
 # event-устройств) — самый надёжный вариант для BT.
 evdev:input:b0005v0000p0000*
  KEYBOARD_KEY_700e4=home
+ KEYBOARD_KEY_c0192=sysrq   # Fn+F12 (KEY_CALC) → PrintScreen
 
 # Запасной: name+DMI-матч (запускается только при KERNELS=="input*",
 # что для BT может не сработать — оставлено на всякий случай).
 evdev:name:MKEY NOVA 1 Keyboard:dmi:bvn*:bvr*:bd*:svnLENOVO:*
  KEYBOARD_KEY_700e4=home
+ KEYBOARD_KEY_c0192=sysrq   # Fn+F12 (KEY_CALC) → PrintScreen

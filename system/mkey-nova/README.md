@@ -2,7 +2,7 @@
 
 Решает задачу переназначения клавиш **только на конкретной внешней клавиатуре**, не затрагивая встроенную клавиатуру ноутбука. Работает на уровне ядра (evdev), поэтому применяется везде: в Wayland/GNOME, в TTY, на экране входа — в отличие от X11-утилит (`xev`, `setxkbmap`), которые не действуют в Wayland-сессии.
 
-Текущее правило: **правый Ctrl → Home** на клавиатуре *YJS MicroChip MKEY NOVA*. Применимо ко всем транспортам: провод, 2.4 ГГц донгл, Bluetooth.
+Текущие правила на клавиатуре *YJS MicroChip MKEY NOVA*: **правый Ctrl → Home** и **Fn+F12 → PrintScreen**. Применимо ко всем транспортам: провод, 2.4 ГГц донгл, Bluetooth.
 
 ## Куда положить
 
@@ -35,7 +35,7 @@ sudo udevadm trigger /dev/input/event13   # event-узел клавиатуры 
 
 ```bash
 udevadm info -q property -n /dev/input/event13 | grep KEYBOARD_KEY
-# должно показать: KEYBOARD_KEY_e4=home
+# должно показать: KEYBOARD_KEY_e4=home и KEYBOARD_KEY_c0192=sysrq
 ```
 
 ## Структура правила
@@ -96,6 +96,18 @@ sudo libinput debug-events --device /dev/input/event13
 
 > Примечание: hwdb также принимает сокращённую форму без префикса `700` (например `e4`), но полная форма `700e4` предпочтительна — она однозначна и совпадает с реальным `MSC_SCAN`.
 
+### Consumer-клавиши (Fn-сочетания, media)
+
+Сочетания, которые прошивка клавиатуры отдаёт в ОС как Consumer Control (а не проглатывает), тоже видны как обычные `EV_KEY`, но их scancode кодируется префиксом `c` вместо `700` — это HID usage с usage page `0x0C`. Ловится так же через `scancap.py`: `MSC_SCAN = 0xc0192`.
+
+Пример: Fn+F12 генерирует `KEY_CALC` (consumer usage `0x192`), scancode `c0192`. Переназначение на PrintScreen:
+
+```hwdb
+ KEYBOARD_KEY_c0192=sysrq
+```
+
+> Полностью «проглоченные» прошивкой Fn-сочетания (например Fn+←/→ = управление подсветкой) scancode не генерируют вообще и переназначению не поддаются.
+
 ### Действия (target keycode)
 
 Имена берутся из Linux `input-event-codes.h` в нижнем регистре без префикса `KEY_`. Часто используемые: `home`, `end`, `pageup`, `pagedown`, `leftctrl`, `rightctrl`, `leftalt`, `rightalt`, `capslock`, `esc`, `insert`, `delete`, `f1`–`f24`, `space`, `enter`, `tab`, `backspace`.
@@ -108,16 +120,19 @@ sudo libinput debug-events --device /dev/input/event13
 # Провод (USB) — vendor:product 5566:000a (имя "YJS MicroChip MKEY NOVA Driver")
 evdev:input:b0003v5566p000A*
  KEYBOARD_KEY_700e4=home
+ KEYBOARD_KEY_c0192=sysrq
 
 # 2.4 ГГц донгл (USB) — vendor:product A8A6:3353 (имя "YJX_CHIP WirelessDevice Keyboard")
 evdev:input:b0003vA8A6p3353*
  KEYBOARD_KEY_700e4=home
+ KEYBOARD_KEY_c0192=sysrq
 
 # Bluetooth — vendor:product нулевые (0000:0000), но modalias-матч по bus
 # (b0005) всё равно срабатывает: это первый lookup в 60-evdev.rules,
 # работает для любого event-устройства безусловно.
 evdev:input:b0005v0000p0000*
  KEYBOARD_KEY_700e4=home
+ KEYBOARD_KEY_c0192=sysrq
 ```
 
 > Нюанс BT: дешёвые BT-HID клавиатуры часто не передают meaningful vendor/product (ядро видит `0000:0000`). Матч `evdev:input:b0005v0000p0000*` широковат (любое BT-HID с нулевым ID), но на практике нулевые ID встречаются редко; если на одной машине окажется несколько таких устройств, дополнительно сузить можно через name+DMI-матч (см. ниже). Матч только по имени (`evdev:name:<имя>:*`) **не работает** — name-lookup в `60-evdev.rules` требует `:dmi:`-часть, формат: `evdev:name:<имя>:dmi:bvn*:bvr*:bd*:svn<вендор>:*`.

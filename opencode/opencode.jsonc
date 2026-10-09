@@ -1,5 +1,7 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "model": "routerai/deepseek/deepseek-v4.1-flash",
+  "small_model": "routerai/xiaomi/mimo-v2.6-flash",
   "provider": {
     "routerai": {
       "npm": "@ai-sdk/openai-compatible",
@@ -19,6 +21,22 @@
         },
         "xiaomi/mimo-v2.6-pro": {
           "name": "MiMo V2.6 Pro",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"],
+          },
+        },
+        "xiaomi/mimo-v2.6-flash": {
+          "name": "MiMo V2.6 Flash",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"],
+          },
+        },
+        "z-ai/glm-5.3": {
+          "name": "GLM-5.3",
           "attachment": true,
           "modalities": {
             "input": ["text", "image"],
@@ -47,12 +65,11 @@
       "enabled": true,
     },
   },
-  "small_model": "openrouter/xiaomi/mimo-v2.6-flash",
   "agent": {
     "code-reviewer": {
       "description": "Reviews code for best practices and potential issues",
       "mode": "subagent",
-      "model": "openrouter/z-ai/glm-5.3",
+      "model": "routerai/z-ai/glm-5.3",
       "prompt": "You are a code reviewer. Focus on security, performance, and maintainability.",
       "tools": {
         "write": false,
@@ -62,11 +79,20 @@
     "coder": {
       "description": "Handles coding tasks: implementation, fixes, and code changes",
       "mode": "subagent",
-      "model": "openrouter/deepseek/deepseek-v4.1-flash",
+      "model": "routerai/deepseek/deepseek-v4.1-flash",
       "prompt": "You are a focused coding agent. Given a task, implement it directly: locate relevant code, make edits, and verify. Follow the codebase conventions and existing patterns.",
     },
     "explore": {
-      "model": "openrouter/xiaomi/mimo-v2.6-flash",
+      "model": "routerai/deepseek/deepseek-v4.1-flash",
+    },
+    "vision": {
+      "description": "Views and analyzes images (screenshots, photos, diagrams). Use ONLY when the current model has no vision support and you need to see a picture, describe its content, extract text, or answer questions about a visual.",
+      "mode": "subagent",
+      "model": "routerai/xiaomi/mimo-v2.6-flash",
+      "prompt": "{file:~/dotfiles/opencode/vision-prompt.txt}",
+      "permission": {
+        "edit": "deny",
+      },
     },
   },
 }

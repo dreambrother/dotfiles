@@ -1,0 +1,13 @@
+#!/bin/bash
+# NetworkManager dispatcher hook (положить в /etc/NetworkManager/dispatcher.d/).
+# При поднятии VPN (vpn-up) для соединения с UUID 23fc99a4-... чистит из
+# gnome-keyring закэшированный secondary_password (второй секрет/OTP), чтобы
+# при следующем подключении пароль запрашивался заново.
+#
+# Установка: sudo cp 70-clear-openconnect-otp /etc/NetworkManager/dispatcher.d/
+#            sudo chmod 755 /etc/NetworkManager/dispatcher.d/70-clear-openconnect-otp
+# Откат:     sudo rm /etc/NetworkManager/dispatcher.d/70-clear-openconnect-otp
+if [ "$2" = "vpn-up" ] && [ "$CONNECTION_UUID" = "23fc99a4-029e-4a5f-bcd6-152345d71e75" ]; then
+    runuser -u nvs -- env DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus \
+        /usr/bin/secret-tool clear vpn_uuid 23fc99a4-029e-4a5f-bcd6-152345d71e75 label secondary_password
+fi

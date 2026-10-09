@@ -3,4 +3,5 @@
 //  "scroll_speed": 0.15,
 //  "scroll_acceleration": { "enabled": false },
   "plugin": ["./tui-plugins/gnome-notify.js", "./tui-plugins/auto-hide-thinking.js"],
+  "plugin_enabled": { "auto-hide-thinking": false },
 }

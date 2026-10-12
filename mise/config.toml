@@ -7,12 +7,13 @@ maven = "latest"
 node = "24"
 "npm:prettier" = "latest"
 ripgrep = "latest"
-rust = "1.98.1"
+rust = "latest"
 shfmt = "latest"
 "github:bgreenwell/doxx" = { version = "latest", matching = "musl" }
 "github:bgreenwell/xleak" = { version = "latest", matching = "musl" }
 poetry = "latest"
 pipx = "latest"
+zig = "latest"
 
 [env]
 GOPATH = "{{env.HOME}}/.local/go"

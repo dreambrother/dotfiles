@@ -75,5 +75,6 @@ jdk-find() {
     find ~/.local/share/mise/installs/java/ -maxdepth 1 -mindepth 1 -type d -name "*$1*"
 }
 no-sleep() {
+    echo "Prevent sleep for $1"
     systemd-inhibit --what=sleep sleep $1
 }

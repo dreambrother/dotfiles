@@ -4,10 +4,17 @@
 # gnome-keyring закэшированный secondary_password (второй секрет/OTP), чтобы
 # при следующем подключении пароль запрашивался заново.
 #
-# Установка: sudo cp 70-clear-openconnect-otp /etc/NetworkManager/dispatcher.d/
+# Чистит через clear-openconnect-otp.py (лежит рядом), который удаляет элемент
+# без OpenSession и тем самым обходит баг gnome-keyring #190 (обычный
+# secret-tool может уронить демон по SIGABRT -> нужен goa-repair).
+#
+# Установка: sudo cp 70-clear-openconnect-otp clear-openconnect-otp.py /etc/NetworkManager/dispatcher.d/
 #            sudo chmod 755 /etc/NetworkManager/dispatcher.d/70-clear-openconnect-otp
-# Откат:     sudo rm /etc/NetworkManager/dispatcher.d/70-clear-openconnect-otp
+#            sudo chmod 644 /etc/NetworkManager/dispatcher.d/clear-openconnect-otp.py
+# Откат:     sudo rm /etc/NetworkManager/dispatcher.d/70-clear-openconnect-otp \
+#                       /etc/NetworkManager/dispatcher.d/clear-openconnect-otp.py
 if [ "$2" = "vpn-up" ] && [ "$CONNECTION_UUID" = "23fc99a4-029e-4a5f-bcd6-152345d71e75" ]; then
     runuser -u nvs -- env DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus \
-        /usr/bin/secret-tool clear vpn_uuid 23fc99a4-029e-4a5f-bcd6-152345d71e75 label secondary_password
+        /usr/bin/python3 "$(dirname -- "$0")/clear-openconnect-otp.py" \
+        23fc99a4-029e-4a5f-bcd6-152345d71e75 secondary_password
 fi

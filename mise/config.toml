@@ -13,7 +13,7 @@ shfmt = "latest"
 "github:bgreenwell/xleak" = { version = "latest", matching = "musl" }
 poetry = "latest"
 pipx = "latest"
-zig = "latest"
+"conda:gcc_impl_linux-64" = "latest"
 
 [env]
 GOPATH = "{{env.HOME}}/.local/go"

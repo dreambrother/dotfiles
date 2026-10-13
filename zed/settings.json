@@ -42,7 +42,9 @@
         "pypi.org",
         "crates.io",
         "hub.docker.com",
-        "pkg.go.dev"
+        "pkg.go.dev",
+        "raw.githubusercontent.com",
+        "github.com"
       ]
     },
     "threads_sidebar": {
@@ -138,7 +140,7 @@
       "enable_thinking": false,
     },
     "dock": "right",
-    "default_profile": "write",
+    "default_profile": "ask",
     "default_model": {
       "provider": "RouterAI",
       "model": "deepseek/deepseek-v4.1-flash",

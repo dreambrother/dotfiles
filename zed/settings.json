@@ -44,7 +44,8 @@
         "hub.docker.com",
         "pkg.go.dev",
         "raw.githubusercontent.com",
-        "github.com"
+        "github.com",
+        "html.duckduckgo.com"
       ]
     },
     "threads_sidebar": {
@@ -227,7 +228,8 @@
         }
       },
       "settings": {
-        "max_memory": "3G"
+        "max_memory": "3G",
+        "java_home": "/var/home/nvs/.local/share/mise/installs/java/temurin-25.0.4+101.0.LTS"
       }
     },
     "yaml-language-server": {

@@ -11,8 +11,8 @@
         "setCacheKey": true,
       },
       "models": {
-        "deepseek/deepseek-v4.1-flash": {
-          "name": "DeepSeek V4.1 Flash",
+        "deepseek/deepseek-v4-flash-latest": {
+          "name": "DeepSeek V4 Flash latest",
           "attachment": true,
           "modalities": {
             "input": ["text", "image"],
@@ -79,11 +79,11 @@
     "coder": {
       "description": "Handles coding tasks: implementation, fixes, and code changes",
       "mode": "subagent",
-      "model": "routerai/deepseek/deepseek-v4.1-flash",
+      "model": "routerai/deepseek/deepseek-v4-flash-latest",
       "prompt": "You are a focused coding agent. Given a task, implement it directly: locate relevant code, make edits, and verify. Follow the codebase conventions and existing patterns.",
     },
     "explore": {
-      "model": "routerai/deepseek/deepseek-v4.1-flash",
+      "model": "routerai/deepseek/deepseek-v4-flash-latest",
     },
     "vision": {
       "description": "Views and analyzes images (screenshots, photos, diagrams). Use ONLY when the current model has no vision support and you need to see a picture, describe its content, extract text, or answer questions about a visual.",

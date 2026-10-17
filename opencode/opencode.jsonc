@@ -1,44 +1,114 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "routerai/deepseek/deepseek-v4.1-flash",
-  "small_model": "routerai/xiaomi/mimo-v2.6-flash",
-  "provider": {
+  "model": "{env:OC_MODEL}",
+
+  "providers": {
     "routerai": {
-      "npm": "@ai-sdk/openai-compatible",
       "name": "RouterAI",
-      "options": {
+      "package": "aisdk:@ai-sdk/openai-compatible",
+      "compatibility": {
+        "supportsPromptCacheKey": true,
+      },
+      "settings": {
         "baseURL": "https://routerai.ru/api/v1",
-        "setCacheKey": true,
       },
       "models": {
-        "deepseek/deepseek-v4-flash-latest": {
-          "name": "DeepSeek V4 Flash latest",
-          "attachment": true,
-          "modalities": {
+        "deepseek/deepseek-v4.1-flash-1017": {
+          "name": "DeepSeek V4.1 Flash 1017",
+          "capabilities": {
+            "tools": true,
             "input": ["text", "image"],
             "output": ["text"],
+          },
+          "limit": {
+            "context": 1000000,
+            "output": 100000,
           },
         },
         "xiaomi/mimo-v2.6-pro": {
           "name": "MiMo V2.6 Pro",
-          "attachment": true,
-          "modalities": {
+          "capabilities": {
+            "tools": true,
             "input": ["text", "image"],
             "output": ["text"],
+          },
+          "limit": {
+            "context": 1000000,
+            "output": 100000,
           },
         },
         "xiaomi/mimo-v2.6-flash": {
           "name": "MiMo V2.6 Flash",
-          "attachment": true,
-          "modalities": {
+          "capabilities": {
+            "tools": true,
             "input": ["text", "image"],
             "output": ["text"],
+          },
+          "limit": {
+            "context": 1000000,
+            "output": 100000,
           },
         },
         "z-ai/glm-5.3": {
           "name": "GLM-5.3",
-          "attachment": true,
-          "modalities": {
+          "capabilities": {
+            "tools": true,
+            "input": ["text", "image"],
+            "output": ["text"],
+          },
+          "limit": {
+            "context": 1000000,
+            "output": 100000,
+          },
+        },
+      },
+    },
+    "litellm": {
+      "name": "LiteLLM",
+      "package": "aisdk:@ai-sdk/openai-compatible",
+      "settings": {
+        "baseURL": "{file:~/.config/secrets/litellm-baseurl}",
+      },
+      "headers": {
+        "x-litellm-session-id": "{file:~/.config/secrets/litellm-session-id}",
+      },
+      "models": {
+        "or-deepseek-v4.1-flash": {
+          "name": "DeepSeek V4.1 Flash",
+          "capabilities": {
+            "tools": true,
+            "input": ["text", "image"],
+            "output": ["text"],
+          },
+        },
+        "or-glm-5.3": {
+          "name": "GLM-5.3",
+          "capabilities": {
+            "tools": true,
+            "input": ["text", "image"],
+            "output": ["text"],
+          },
+        },
+        "or-glm-5.3-flash": {
+          "name": "GLM-5.3 Flash",
+          "capabilities": {
+            "tools": true,
+            "input": ["text", "image"],
+            "output": ["text"],
+          },
+        },
+        "or-mimo-v2.5": {
+          "name": "MiMo V2.5",
+          "capabilities": {
+            "tools": true,
+            "input": ["text", "image"],
+            "output": ["text"],
+          },
+        },
+        "grok-4.7": {
+          "name": "Grok 4.7",
+          "capabilities": {
+            "tools": true,
             "input": ["text", "image"],
             "output": ["text"],
           },
@@ -46,53 +116,55 @@
       },
     },
   },
+
   "mcp": {
-    "context7": {
-      "type": "remote",
-      "url": "https://mcp.context7.com/mcp",
-    },
-    "chrome-devtools": {
-      "type": "local",
-      "command": [
-        "toolbox",
-        "run",
-        "-c",
-        "dev-utils",
-        "/bin/sh",
-        "-c",
-        "npx -y chrome-devtools-mcp@latest --no-usage-statistics",
-      ],
-      "enabled": true,
+    "servers": {
+      "context7": {
+        "type": "remote",
+        "url": "https://mcp.context7.com/mcp",
+      },
+      "chrome-devtools": {
+        "type": "local",
+        "command": [
+          "toolbox",
+          "run",
+          "-c",
+          "dev-utils",
+          "/bin/sh",
+          "-c",
+          "npx -y chrome-devtools-mcp@1.11.0 --no-usage-statistics",
+        ],
+      },
     },
   },
-  "agent": {
+
+  "agents": {
+    "title": {
+      "model": "{env:OC_TITLE_MODEL}",
+    },
     "code-reviewer": {
       "description": "Reviews code for best practices and potential issues",
       "mode": "subagent",
-      "model": "routerai/z-ai/glm-5.3",
-      "prompt": "You are a code reviewer. Focus on security, performance, and maintainability.",
-      "tools": {
-        "write": false,
-        "edit": false,
-      },
+      "model": "{env:OC_REVIEW_MODEL}",
+      "system": "You are a code reviewer. Focus on security, performance, and maintainability.",
+      "permissions": [{ "action": "edit", "resource": "*", "effect": "deny" }],
     },
     "coder": {
       "description": "Handles coding tasks: implementation, fixes, and code changes",
       "mode": "subagent",
-      "model": "routerai/deepseek/deepseek-v4-flash-latest",
-      "prompt": "You are a focused coding agent. Given a task, implement it directly: locate relevant code, make edits, and verify. Follow the codebase conventions and existing patterns.",
+      "model": "{env:OC_CODER_MODEL}",
+      "system": "You are a focused coding agent. Given a task, implement it directly: locate relevant code, make edits, and verify. Follow the codebase conventions and existing patterns.",
     },
     "explore": {
-      "model": "routerai/deepseek/deepseek-v4-flash-latest",
+      "mode": "subagent",
+      "model": "{env:OC_EXPLORE_MODEL}",
     },
     "vision": {
       "description": "Views and analyzes images (screenshots, photos, diagrams). Use ONLY when the current model has no vision support and you need to see a picture, describe its content, extract text, or answer questions about a visual.",
       "mode": "subagent",
-      "model": "routerai/xiaomi/mimo-v2.6-flash",
-      "prompt": "{file:~/dotfiles/opencode/vision-prompt.txt}",
-      "permission": {
-        "edit": "deny",
-      },
+      "model": "{env:OC_VISION_MODEL}",
+      "system": "{file:~/dotfiles/opencode/vision-prompt.txt}",
+      "permissions": [{ "action": "edit", "resource": "*", "effect": "deny" }],
     },
   },
 }

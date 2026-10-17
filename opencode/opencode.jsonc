@@ -1,7 +1,9 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "model": "{env:OC_MODEL}",
-
+  "websearch": {
+    "provider": "tinyfish",
+  },
   "providers": {
     "routerai": {
       "name": "RouterAI",
@@ -116,7 +118,6 @@
       },
     },
   },
-
   "mcp": {
     "servers": {
       "context7": {
@@ -137,7 +138,6 @@
       },
     },
   },
-
   "agents": {
     "title": {
       "model": "{env:OC_TITLE_MODEL}",
